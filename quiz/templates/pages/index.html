@@ -1,0 +1,29 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}
+    {% if title %}
+        <title>Django - {{ title }}</title>
+    {% else %}
+        <title>Django</title>
+    {% endif %}
+{% endblock title %}
+
+{% block body %}
+{% for post in doc %}
+<!-- post -->
+<div class="col-md-12">
+    <div class="post post-row">
+        <a class="post-img" href="blog-post.html"><img src="{% static 'img/post-2.jpg' %}" alt=""></a>
+        <div class="post-body">
+            <div class="post-meta">
+                <a class="post-category cat-3" href="category.html">{{post.genre}}</a>
+                <span class="post-date">{{ post.date_posted|date:"F d, Y" }}</span>
+            </div>
+            <h3 class="post-title"><a href="{% url 'quiz' post.id %}">{{ post.title }}</a></h3>
+            <p>{{ post.content }}</p>
+        </div>
+    </div>
+</div>
+<!-- /post -->
+{% endfor %}
+{% endblock body %}
