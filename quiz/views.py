@@ -21,3 +21,15 @@ def quiz(request, id):
         'quiz': Post.objects.get(id=id)
     }
     return render(request, 'pages/quiz.html', post)
+
+def view_404(request, Exception):
+    content = {
+        'title': 'Page no found'
+    }
+    return render(request, 'pages/error.html', content)
+
+def view_500(request):
+    content = {
+        'title': 'Page no found'
+    }
+    return render(request, 'pages/error.html', content)
