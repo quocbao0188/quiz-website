@@ -18,7 +18,7 @@ def doc(request):
 
 def quiz(request, id):
     post = {
-        'quiz': Post.objects.get(id=id)
+        'quiz_post': Post.objects.get(id=id)
     }
     return render(request, 'pages/quiz.html', post)
 

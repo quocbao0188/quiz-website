@@ -8,9 +8,11 @@
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		
 		<!--Title for pages-->
-		{% block title %}
-		
-		{% endblock title %}
+		{% if title %}
+        	<title>Django - {{ title }}</title>
+    	{% else %}
+        	<title>Django</title>
+    	{% endif %}
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:700%7CNunito:300,600" rel="stylesheet"> 
@@ -106,12 +108,14 @@
 				<div class="row">
 					<div class="col-md-8">
 						<div class="row">
-							<div class="col-md-12">
-								<div class="section-title">
-									<h2>Most Read</h2>
-								</div>
-							</div>
-							
+							{% if messages %}
+								{% for message in messages %}
+									<div class='alert alert-{{ message.tags }}'>
+										{{ message }}
+									</div>
+								{% empty %}
+							{% endfor %}
+							{% endif %}
                             {% block body %}
                             
                             {% endblock body %}

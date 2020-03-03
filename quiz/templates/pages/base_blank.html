@@ -8,9 +8,11 @@
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
 		<!--Title for pages-->
-		{% block title %}
-		
-		{% endblock title %}
+		{% if title %}
+        	<title>Django - {{ title }}</title>
+    	{% else %}
+        	<title>Django</title>
+    	{% endif %}
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:700%7CNunito:300,600" rel="stylesheet"> 

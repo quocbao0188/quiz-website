@@ -16,11 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import handler404, handler500
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('quiz.urls')),
+    path('register/', include('users.urls'))
+    #path('register/', user_views.register, name='register'),
 ]
+
+#Kiểm tra DEBUG == TRUE hay không vì trong chế độ DEBUG mới cần mapping MEDIA_URL và MEDIA_ROOT lại với nhau
+#Còn khi deploy lên server, thì web server sẽ chịu trách nhiệm các đường dẫn file ảnh, Django không cần thực hiện cái mapping này
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 handler404 = 'quiz.views.view_404'
 handler500 = 'quiz.views.view_500'
