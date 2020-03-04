@@ -1,254 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		{% load static %}
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-		
-		<!--Title for pages-->
-		{% if title %}
-        	<title>Django - {{ title }}</title>
-    	{% else %}
-        	<title>Django</title>
-    	{% endif %}
 
-		<!-- Google font -->
-		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:700%7CNunito:300,600" rel="stylesheet"> 
+<head>
+	{% load static %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<!-- Bootstrap -->
-		<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+	<!--Title for pages-->
+	{% block title %}
+	
+	{% endblock title %}
 
-		<!-- Font Awesome Icon -->
-		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:700%7CNunito:300,600" rel="stylesheet">
 
-		<!-- Custom stlylesheet -->
-		<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"/>
+	<!-- Bootstrap -->
+	<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
 
-    </head>
-	<body>
+	<!-- Font Awesome Icon -->
+	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 
-		<!-- Header -->
-		<header id="header">
-			<!-- Nav -->
-			<div id="nav">
-				<!-- Main Nav -->
-				<div id="nav-fixed">
-					<div class="container">
-						<!-- logo -->
-						<div class="nav-logo">
-							<a href="/" class="logo"><img src="{% static 'img/logo.png' %}" alt=""></a>
-						</div>
-						<!-- /logo -->
+	<!-- Custom stlylesheet -->
+	<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" />
 
-						<!-- nav -->
-						<ul class="nav-menu nav navbar-nav">
-							<li><a href="{% url 'home' %}">Home</a></li>
-							<li class="cat-1"><a href="{% url 'documents' %}">Documents</a></li>
-							<li class="cat-2"><a href="category.html">Sharing</a></li>
-						</ul>
-						<!-- /nav -->
+</head>
 
-						<!-- search & aside toggle -->
-						<div class="nav-btns">
-							<button class="aside-btn"><i class="fa fa-bars"></i></button>
-							<button class="search-btn"><i class="fa fa-search"></i></button>
-							<div class="search-form">
-								<input class="search-input" type="text" name="search" placeholder="Enter Your Search ...">
-								<button class="search-close"><i class="fa fa-times"></i></button>
-							</div>
-						</div>
-						<!-- /search & aside toggle -->
+<body>
+
+	<!-- Header -->
+	<header id="header">
+		<!-- Nav -->
+		<div id="nav">
+			<!-- Main Nav -->
+			<div id="nav-fixed">
+				<div class="container">
+					<!-- logo -->
+					<div class="nav-logo">
+						<a href="/" class="logo"><img src="{% static 'img/logo.png' %}" alt=""></a>
 					</div>
-				</div>
-				<!-- /Main Nav -->
+					<!-- /logo -->
 
-				<!-- Aside Nav -->
-				<div id="nav-aside">
 					<!-- nav -->
-					<div class="section-row">
-						<ul class="nav-aside-menu">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About Us</a></li>
-							<li><a href="#">Join Us</a></li>
-							<li><a href="#">Advertisement</a></li>
-							<li><a href="contact.html">Contacts</a></li>
-						</ul>
-					</div>
+					<ul class="nav-menu nav navbar-nav">
+						<li><a href="{% url 'home' %}">Home</a></li>
+						<li class="cat-1"><a href="{% url 'documents' %}">Documents</a></li>
+						<li class="cat-2"><a href="category.html">Sharing</a></li>
+					</ul>
 					<!-- /nav -->
 
-					<!-- social links -->
-					<div class="section-row">
-						<h3>Follow us</h3>
-						<ul class="nav-aside-social">
-							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-							<li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+					<!-- search & aside toggle -->
+					<div class="nav-btns">
+						<button class="aside-btn"><i class="fa fa-bars"></i></button>
+						<button class="search-btn"><i class="fa fa-search"></i></button>
+						<div class="search-form">
+							<input class="search-input" type="text" name="search" placeholder="Enter Your Search ...">
+							<button class="search-close"><i class="fa fa-times"></i></button>
+						</div>
+						<ul class="nav-menu nav navbar-nav">
+							{% if user.is_authenticated %}
+								<li class="cat-3"><a href="#">{{ user.username }}</a></li>
+								<li class="cat-4"><a href="{% url 'logout' %}">Logout</a></li>
+							{% else %}
+								<li class="cat-3"><a href="{% url 'login' %}">Login</a></li>
+								<li class="cat-4"><a href="{% url 'register' %}">Register</a></li>
+							{% endif %}
 						</ul>
 					</div>
-					<!-- /social links -->
-
-					<!-- aside nav close -->
-					<button class="nav-aside-close"><i class="fa fa-times"></i></button>
-					<!-- /aside nav close -->
+					<!-- /search & aside toggle -->
 				</div>
-				<!-- Aside Nav -->
 			</div>
-			<!-- /Nav -->
-		</header>
-		<!-- /Header -->
+			<!-- /Main Nav -->
 
-		<!-- section -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-8">
-						<div class="row">
-							{% if messages %}
-								{% for message in messages %}
-									<div class='alert alert-{{ message.tags }}'>
-										{{ message }}
-									</div>
-								{% empty %}
-							{% endfor %}
-							{% endif %}
-                            {% block body %}
-                            
-                            {% endblock body %}
-							
-							<div class="col-md-12">
-								<div class="section-row">
-									<button class="primary-button center-block">Load More</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-4">
-						<!-- ad -->
-						<div class="aside-widget text-center">
-							<a href="#" style="display: inline-block;margin: auto;">
-								<img class="img-responsive" src="./img/ad-1.jpg" alt="">
-							</a>
-						</div>
-						<!-- /ad -->
-						
-						<!-- catagories -->
-						<div class="aside-widget">
-							<div class="section-title">
-								<h2>Catagories</h2>
-							</div>
-							<div class="category-widget">
-								<ul>
-									<li><a href="#" class="cat-1">Web Design<span>340</span></a></li>
-									<li><a href="#" class="cat-2">JavaScript<span>74</span></a></li>
-									<li><a href="#" class="cat-4">JQuery<span>41</span></a></li>
-									<li><a href="#" class="cat-3">CSS<span>35</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<!-- /catagories -->
-						
-						<!-- tags -->
-						<div class="aside-widget">
-							<div class="tags-widget">
-								<ul>
-									<li><a href="#">Chrome</a></li>
-									<li><a href="#">CSS</a></li>
-									<li><a href="#">Tutorial</a></li>
-									<li><a href="#">Backend</a></li>
-									<li><a href="#">JQuery</a></li>
-									<li><a href="#">Design</a></li>
-									<li><a href="#">Development</a></li>
-									<li><a href="#">JavaScript</a></li>
-									<li><a href="#">Website</a></li>
-								</ul>
-							</div>
-						</div>
-						<!-- /tags -->
-					</div>
+			<!-- Aside Nav -->
+			<div id="nav-aside">
+				<!-- nav -->
+				<div class="section-row">
+					<h1>Menu</h1>
+					<ul class="nav-aside-menu">
+						<li><a href="{% url 'home' %}">Home</a></li>
+						<li><a href="{% url 'documents' %}">Documents</a></li>
+						<li><a href="#">Sharing</a></li>
+					</ul>
 				</div>
-				<!-- /row -->
+				<!-- /nav -->
+
+				<div class="section-row">
+					<hr>
+				</div>
+
+				<div class="section-row">
+					<h1>Account</h1>
+					<ul class="nav-aside-menu">
+						{% if user.is_authenticated %}
+							<li><a href="#">{{ user.username }}</a></li>
+							<li><a href="{% url 'logout' %}">Logout</a></li>
+						{% else %}
+							<li><a href="{% url 'login' %}">Login</a></li>
+							<li><a href="{% url 'register' %}">Register</a></li>
+						{% endif %}
+					</ul>
+				</div>
+
+				<div class="section-row">
+					<hr>
+				</div>
+
+				<!-- social links -->
+				<div class="section-row">
+					<h1>Follow us</h1>
+					<ul class="nav-aside-social">
+						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+				</div>
+				<!-- /social links -->
+
+				<!-- aside nav close -->
+				<button class="nav-aside-close"><i class="fa fa-times"></i></button>
+				<!-- /aside nav close -->
 			</div>
-			<!-- /container -->
+			<!-- Aside Nav -->
 		</div>
-		<!-- /section -->
+		<!-- /Nav -->
+	</header>
+	<!-- /Header -->
 
-		<!-- Footer -->
-		<footer id="footer">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-5">
-						<div class="footer-widget">
-							<div class="footer-logo">
-								<a href="index.html" class="logo"><img src="./img/logo.png" alt=""></a>
-							</div>
-							<ul class="footer-nav">
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Advertisement</a></li>
-							</ul>
-							<div class="footer-copyright">
-								<span>&copy; <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span>
+	<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-8">
+					<div class="row">
+						{% if messages %}
+						{% for message in messages %}
+						<div class='alert alert-{{ message.tags }}'>
+							{{ message }}
+						</div>
+						{% endfor %}
+						{% endif %}
+						{% block body %}
+
+						{% endblock body %}
+
+						<div class="col-md-12">
+							<div class="section-row">
+								<button class="primary-button center-block">Load More</button>
 							</div>
 						</div>
 					</div>
-
-					<div class="col-md-4">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="footer-widget">
-									<h3 class="footer-title">About Us</h3>
-									<ul class="footer-links">
-										<li><a href="about.html">About Us</a></li>
-										<li><a href="#">Join Us</a></li>
-										<li><a href="contact.html">Contacts</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="footer-widget">
-									<h3 class="footer-title">Catagories</h3>
-									<ul class="footer-links">
-										<li><a href="category.html">Web Design</a></li>
-										<li><a href="category.html">JavaScript</a></li>
-										<li><a href="category.html">Css</a></li>
-										<li><a href="category.html">Jquery</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-3">
-						<div class="footer-widget">
-							<h3 class="footer-title">Join our Newsletter</h3>
-							<ul class="footer-social">
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-							</ul>
-						</div>
-					</div>
-
 				</div>
-				<!-- /row -->
+
+				<div class="col-md-4">
+					<!-- ad -->
+					<div class="aside-widget text-center">
+						<a href="#" style="display: inline-block;margin: auto;">
+							<img class="img-responsive" src="./img/ad-1.jpg" alt="">
+						</a>
+					</div>
+					<!-- /ad -->
+
+					<!-- catagories -->
+					<div class="aside-widget">
+						<div class="section-title">
+							<h2>Catagories</h2>
+						</div>
+						<div class="category-widget">
+							<ul>
+								<li><a href="#" class="cat-1">Web Design<span>340</span></a></li>
+								<li><a href="#" class="cat-2">JavaScript<span>74</span></a></li>
+								<li><a href="#" class="cat-4">JQuery<span>41</span></a></li>
+								<li><a href="#" class="cat-3">CSS<span>35</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- /catagories -->
+
+					<!-- tags -->
+					<div class="aside-widget">
+						<div class="tags-widget">
+							<ul>
+								<li><a href="#">Chrome</a></li>
+								<li><a href="#">CSS</a></li>
+								<li><a href="#">Tutorial</a></li>
+								<li><a href="#">Backend</a></li>
+								<li><a href="#">JQuery</a></li>
+								<li><a href="#">Design</a></li>
+								<li><a href="#">Development</a></li>
+								<li><a href="#">JavaScript</a></li>
+								<li><a href="#">Website</a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- /tags -->
+				</div>
 			</div>
-			<!-- /container -->
-		</footer>
-		<!-- /Footer -->
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
 
-		<!-- jQuery Plugins -->
-		<script src="{% static 'js/jquery.min.js' %}"></script>
-		<script src="{% static 'js/bootstrap.min.js' %}"></script>
-		<script src="{% static 'js/main.js' %}"></script>
-		
+	<!-- Footer -->
+	<footer id="footer">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-5">
+					<div class="footer-widget">
+						<div class="footer-logo">
+							<a href="index.html" class="logo"><img src="./img/logo.png" alt=""></a>
+						</div>
+						<ul class="footer-nav">
+							<li><a href="#">Privacy Policy</a></li>
+							<li><a href="#">Advertisement</a></li>
+						</ul>
+						<div class="footer-copyright">
+							<span>&copy;
+								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+								Copyright &copy;
+								<script>document.write(new Date().getFullYear());</script> All rights reserved | This
+								template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
+									href="https://colorlib.com" target="_blank">Colorlib</a>
+								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span>
+						</div>
+					</div>
+				</div>
 
-	</body>
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="footer-widget">
+								<h3 class="footer-title">About Us</h3>
+								<ul class="footer-links">
+									<li><a href="about.html">About Us</a></li>
+									<li><a href="#">Join Us</a></li>
+									<li><a href="contact.html">Contacts</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="footer-widget">
+								<h3 class="footer-title">Catagories</h3>
+								<ul class="footer-links">
+									<li><a href="category.html">Web Design</a></li>
+									<li><a href="category.html">JavaScript</a></li>
+									<li><a href="category.html">Css</a></li>
+									<li><a href="category.html">Jquery</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="footer-widget">
+						<h3 class="footer-title">Join our Newsletter</h3>
+						<ul class="footer-social">
+							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</footer>
+	<!-- /Footer -->
+
+	<!-- jQuery Plugins -->
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+
+
+</body>
+
 </html>

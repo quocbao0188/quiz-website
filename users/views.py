@@ -3,14 +3,30 @@ from django.contrib import messages
 from .forms import UserRegisterForm
 # Create your views here.
 
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserRegisterForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             username = form.cleaned_data.get('username')
+#             messages.success(request, f'Account created for {username}!')
+#             return redirect('home')
+#     else:
+#         form = UserRegisterForm()
+#     content = {
+#         'title': 'Register',
+#         'form': form
+#     }
+#     return render(request, 'users/register.html', content)
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
-        if form.is_valid():
+        if form.is_valid(): #is_valid phải viết hàm clean_name-method thì nó mới hiểu
             form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}!')
-            return redirect('home')
+            messages.success(request, f'Your account { username } has been create! You are now able to login')
+            return redirect('login')
     else:
         form = UserRegisterForm()
     content = {

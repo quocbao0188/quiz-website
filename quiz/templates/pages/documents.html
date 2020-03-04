@@ -2,6 +2,10 @@
 
 {% load static %}
 
+{% block title %}
+    <title>Django - {{title}}</title>
+{% endblock title %}
+
 {% block body %}
 {% for post in doc %}
 <!-- post -->

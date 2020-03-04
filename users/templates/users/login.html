@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    <title>Django - {{title}}</title>
+	<title>Django - Login</title>
 {% endblock title %}
 
 {% block body %}
@@ -13,17 +13,17 @@
             <!--Bảo mật csrf-->
             {% csrf_token %}
             <fieldset class="form_group">
-                <legend class="border_bottom mb_4">Join Today</legend>
+                <legend class="border_bottom mb_4">Log In</legend>
                 <!--Bảo mật csrf-->
                 {{ form|crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                <button class="btn btn-outline-info" type="submit">Login</button>
             </div>
         </form>
         <div class="border-top pt-3">
             <small class="text-muted">
-                Already Have a account <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+                Need a account <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
             </small>
         </div>
     </div>
