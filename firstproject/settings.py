@@ -124,13 +124,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+#Dùng để chỉ url cho thư mục static
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-#
+#Dùng để hướng url lưu ảnh mà người dùng upload lên
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#
+#Dùng để sử dụng Crispy template cho form nhập
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #Khi login thì sẽ chuyển đến trang chủ
 LOGIN_REDIRECT_URL = 'home'
+#Khi người dùng vào trang profile/ thì sẽ hiện trang đăng nhập trước rồi sau đó mới vào trang profile
+LOGIN_URL = 'login'

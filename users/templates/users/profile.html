@@ -1,0 +1,16 @@
+{% extends "pages/base.html" %}
+
+{% block title %}
+    <title>Django - Profile</title>
+{% endblock title %}
+
+{% block body %}
+<!-- post -->
+<div class="col-md-12">
+    <div class="content-section">
+        <h2>Profile</h2>
+        <h3>{{ user.username }}</h3>
+    </div>
+</div>
+<!-- /post -->
+{% endblock body %}
