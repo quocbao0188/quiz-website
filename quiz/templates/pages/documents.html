@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    <title>Django - {{title}}</title>
+    <title>{{title}}</title>
 {% endblock title %}
 
 {% block body %}
@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col-md-10">
                 <ul class="page-header-breadcrumb">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
                     <li>Documents</li>
                 </ul>
                 <h1>Documents</h1>

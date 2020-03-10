@@ -1,7 +1,7 @@
 {% extends "pages/base.html" %}
 
 {% block title %}
-    <title>Django - Profile</title>
+<title>Profile</title>
 {% endblock title %}
 
 {% block body %}
@@ -9,7 +9,25 @@
 <div class="col-md-12">
     <div class="content-section">
         <h2>Profile</h2>
-        <h3>{{ user.username }}</h3>
+        <div class="section-row">
+            <div class="post-author">
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="{{ user.profile.image.url }}" alt="">
+                    </div>
+                    <div class="media-body">
+                        <div class="media-heading">
+                            <h3>{{ user.username }}</h3>
+                        </div>
+                        <strong>Username: </strong><p>{{ user.username }}</p>
+                        <strong>First Name: </strong><p>{{ user.first_name }}</p>
+                        <strong>Last Name: </strong><p>{{ user.last_name }}</p>
+                        <strong>Email: </strong><p>{{ user.email }}</p>
+                        <strong>Date Joined: </strong><p>{{ user.date_joined }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- /post -->

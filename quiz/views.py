@@ -33,3 +33,9 @@ def view_500(request):
         'title': 'Page no found'
     }
     return render(request, 'pages/error.html', content)
+
+def sharing(request):
+    content = {
+        'title': 'Sharing'
+    }
+    return render(request, 'pages/sharing.html', content)

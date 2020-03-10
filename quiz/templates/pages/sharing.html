@@ -7,7 +7,7 @@
 {% endblock title %}
 
 {% block body %}
-<h3>This page does not exist</h3>
+
 {% endblock body %}
 
 {% block page_header %}
@@ -17,10 +17,10 @@
         <div class="row">
             <div class="col-md-10">
                 <ul class="page-header-breadcrumb">
-                    <li><a href="index.html">Home</a></li>
-                    <li>Documents</li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Sharing</li>
                 </ul>
-                <h1>Documents</h1>
+                <h1>Sharing</h1>
             </div>
         </div>
     </div>

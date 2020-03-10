@@ -46,7 +46,7 @@
 					<ul class="nav-menu nav navbar-nav">
 						<li><a href="{% url 'home' %}">Home</a></li>
 						<li class="cat-1"><a href="{% url 'documents' %}">Documents</a></li>
-						<li class="cat-2"><a href="#">Sharing</a></li>
+						<li class="cat-2"><a href="{% url 'sharing' %}">Sharing</a></li>
 					</ul>
 					<!-- /nav -->
 
@@ -81,7 +81,7 @@
 					<ul class="nav-aside-menu">
 						<li><a href="{% url 'home' %}">Home</a></li>
 						<li><a href="{% url 'documents' %}">Documents</a></li>
-						<li><a href="#">Sharing</a></li>
+						<li><a href="{% url 'sharing' %}">Sharing</a></li>
 					</ul>
 				</div>
 				<!-- /nav -->
@@ -145,12 +145,6 @@
 						{% block body %}
 
 						{% endblock body %}
-
-						<div class="col-md-12">
-							<div class="section-row">
-								<button class="primary-button center-block">Load More</button>
-							</div>
-						</div>
 					</div>
 				</div>
 
@@ -259,7 +253,7 @@
 
 				<div class="col-md-3">
 					<div class="footer-widget">
-						<h3 class="footer-title">Join our Newsletter</h3>
+						<h3 class="footer-title">Follow us</h3>
 						<ul class="footer-social">
 							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
