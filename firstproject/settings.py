@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     #Thêm app vào setting (QuizConfig và UsersConfig là tên của class trong apps.py của mỗi app)
     'quiz.apps.QuizConfig',
     'users.apps.UsersConfig',
+    'gpa.apps.GpaConfig',
+    'docum.apps.DocumConfig',
+    'sharing.apps.SharingConfig',
     'crispy_forms',
 ]
 

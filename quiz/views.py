@@ -9,13 +9,6 @@ def index(request):
     }
     return render(request, 'pages/index.html', content)
 
-def doc(request):
-    content = {
-        'title': 'Document',
-        'doc':  Post.objects.all().order_by('-date_posted')
-    }
-    return render(request, 'pages/documents.html', content)
-
 def quiz(request, id):
     post = {
         'quiz_post': Post.objects.get(id=id)
@@ -34,8 +27,3 @@ def view_500(request):
     }
     return render(request, 'pages/error.html', content)
 
-def sharing(request):
-    content = {
-        'title': 'Sharing'
-    }
-    return render(request, 'pages/sharing.html', content)
