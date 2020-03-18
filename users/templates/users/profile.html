@@ -1,4 +1,5 @@
 {% extends "pages/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 <title>Profile</title>
@@ -9,6 +10,7 @@
 <div class="col-md-12">
     <div class="content-section">
         <h2>Profile</h2>
+
         <div class="section-row">
             <div class="post-author">
                 <div class="media">
@@ -19,16 +21,27 @@
                         <div class="media-heading">
                             <h3>{{ user.username }}</h3>
                         </div>
-                        <strong>Username: </strong><p>{{ user.username }}</p>
-                        <strong>First Name: </strong><p>{{ user.first_name }}</p>
-                        <strong>Last Name: </strong><p>{{ user.last_name }}</p>
-                        <strong>Email: </strong><p>{{ user.email }}</p>
-                        <strong>Last Joined: </strong><p>{{ user.last_login }}</p>
-                        <strong>Date Joined: </strong><p>{{ user.date_joined }}</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="section-row">
+            <form method="POST" enctype="multipart/form-data">
+                <!--Bảo mật csrf-->
+                {% csrf_token %}
+                <fieldset class="form_group">
+                    <legend class="border_bottom mb_4">Profile Info</legend>
+                    <!--Bảo mật csrf-->
+                    {{ u_form|crispy }}
+                    {{ p_form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
 <!-- /post -->
