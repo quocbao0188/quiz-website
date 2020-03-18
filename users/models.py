@@ -13,7 +13,8 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
 
     # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 100px
-    def save(self):
+    def save(self, **kwargs):
+        # Ghi đè phương thức save()
         super().save()
         img = Image.open(self.image.path)
         if img.height > 100 or img.width > 100:

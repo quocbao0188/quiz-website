@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from PIL import Image
 # Create your models here.
 
 class Post(models.Model):
@@ -14,3 +15,13 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 300px x 200px
+    def save(self, **kwargs):
+        # Ghi đè phương thức save()
+        super().save()
+        img = Image.open(self.image.path)
+        if img.height > 300 or img.width > 200:
+            output_size = (300, 200)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
