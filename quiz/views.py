@@ -1,13 +1,26 @@
 from django.shortcuts import render
 from .models import Post
+from django.views.generic import ListView, DetailView
 # Create your views here.
 
 def index(request):
     content = {
         'title': 'Home',
-        'doc':  Post.objects.all().order_by('-date_posted')
+        'doc':  Post.objects.all()#.order_by('-date_posted')
     }
     return render(request, 'pages/index.html', content)
+
+# List View Index
+class QuizListView(ListView):
+    model = Post
+    # <app>/<model>_<viewtype>.html
+    template_name = 'pages/index.html'
+    context_object_name = 'doc'
+    paginate_by = 3
+
+class QuizDetailView(DetailView):
+    model = Post
+    template_name = 'pages/quiz-detail.html'
 
 def quiz(request, id):
     post = {

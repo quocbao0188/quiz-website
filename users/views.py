@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 #     }
 #     return render(request, 'users/register.html', content)
 
+# Hàm đăng ký tài khoản
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)

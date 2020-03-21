@@ -50,10 +50,13 @@ class UserRegisterForm(forms.Form):
 
 # Hàm update thông tin user
 class UserUpdateForm(forms.ModelForm):
+    # Biến cùng tên với các cột trong database
     email = forms.EmailField()
+    first_name = forms.CharField()
+    last_name = forms.CharField()
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'first_name', 'last_name']
 
 # Hàm update thông tin profile (avatar)
 class ProfileUpdateForm(forms.ModelForm):
