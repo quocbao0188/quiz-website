@@ -10,7 +10,7 @@
 
 	<!--Title for pages-->
 	{% block title %}
-	
+
 	{% endblock title %}
 
 	<!-- Google font -->
@@ -43,12 +43,7 @@
 					<!-- /logo -->
 
 					<!-- nav -->
-					<ul class="nav-menu nav navbar-nav">
-						<li><a href="{% url 'home' %}">Home</a></li>
-						<li class="cat-1"><a href="{% url 'documents' %}">Documents</a></li>
-						<li class="cat-2"><a href="{% url 'sharing' %}">Sharing</a></li>
-						<li class="cat-3"><a href="{% url 'gpa' %}">GPA Calculator</a></li>
-					</ul>
+					{% include 'pages/navbar.html' %}
 					<!-- /nav -->
 
 					<!-- search & aside toggle -->
@@ -59,15 +54,7 @@
 							<input class="search-input" type="text" name="search" placeholder="Enter Your Search ...">
 							<button class="search-close"><i class="fa fa-times"></i></button>
 						</div>
-						<ul class="nav-menu nav navbar-nav">
-							{% if user.is_authenticated %}
-								<li class="cat-3"><a href="{% url 'profile' %}">{{ user.username }}</a></li>
-								<li class="cat-4"><a href="{% url 'logout' %}">Logout</a></li>
-							{% else %}
-								<li class="cat-3"><a href="{% url 'login' %}">Login</a></li>
-								<li class="cat-4"><a href="{% url 'register' %}">Register</a></li>
-							{% endif %}
-						</ul>
+						{% include 'pages/navbar-account.html' %}
 					</div>
 					<!-- /search & aside toggle -->
 				</div>
@@ -75,54 +62,7 @@
 			<!-- /Main Nav -->
 
 			<!-- Aside Nav -->
-			<div id="nav-aside">
-				<!-- nav -->
-				<div class="section-row">
-					<h1>Menu</h1>
-					<ul class="nav-aside-menu">
-						<li><a href="{% url 'home' %}">Home</a></li>
-						<li><a href="{% url 'documents' %}">Documents</a></li>
-						<li><a href="{% url 'sharing' %}">Sharing</a></li>
-						<li><a href="{% url 'gpa' %}">GPA Calculator</a></li>
-					</ul>
-				</div>
-				<!-- /nav -->
-
-				<div class="section-row">
-					<hr>
-				</div>
-
-				<div class="section-row">
-					<h1>Account</h1>
-					<ul class="nav-aside-menu">
-						{% if user.is_authenticated %}
-							<li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
-							<li><a href="{% url 'logout' %}">Logout</a></li>
-						{% else %}
-							<li><a href="{% url 'login' %}">Login</a></li>
-							<li><a href="{% url 'register' %}">Register</a></li>
-						{% endif %}
-					</ul>
-				</div>
-
-				<div class="section-row">
-					<hr>
-				</div>
-
-				<!-- social links -->
-				<div class="section-row">
-					<h1>Follow us</h1>
-					<ul class="nav-aside-social">
-						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-					</ul>
-				</div>
-				<!-- /social links -->
-
-				<!-- aside nav close -->
-				<button class="nav-aside-close"><i class="fa fa-times"></i></button>
-				<!-- /aside nav close -->
-			</div>
+			{% include "pages/aside-nav.html" %}
 			<!-- Aside Nav -->
 		</div>
 		<!-- /Nav -->
@@ -140,9 +80,9 @@
 						<!-- Hiện messages thông báo -->
 						{% if messages %}
 							{% for message in messages %}
-								<div class='alert alert-{{ message.tags }}'>
-									{{ message }}
-								</div>
+							<div class='alert alert-{{ message.tags }}'>
+								{{ message }}
+							</div>
 							{% endfor %}
 						{% endif %}
 

@@ -24,12 +24,12 @@
 
 <!-- Page Header -->
 <div id="post-header" class="page-header">
-    <div class="background-img" style="background-image: url({{ object.image.url }});"></div>
+    <div class="background-img" style="background-image: url({{object.image.url}});"></div>
     <div class="container">
         <div class="row">
             <div class="col-md-10">
                 <div class="post-meta">
-                    <a class="post-category cat-2" href="">{{object.genre}}</a>
+                    <a class="post-category cat-2" href="">{{ object.genre }}</a>
                     <span class="post-date">{{ object.date_posted|date:"F d, Y" }}</span>
                 </div>
                 <h1>{{ object.title }}</h1>

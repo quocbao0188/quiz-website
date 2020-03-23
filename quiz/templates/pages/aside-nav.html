@@ -1,0 +1,49 @@
+<div id="nav-aside">
+    <!-- nav -->
+    <div class="section-row">
+        <h1>Menu</h1>
+        <ul class="nav-aside-menu">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'documents' %}">Documents</a></li>
+            <li><a href="{% url 'sharing' %}">Sharing</a></li>
+            <li><a href="{% url 'quiz' %}">Quiz</a></li>
+            <li><a href="{% url 'gpa' %}">GPA Calculator</a></li>
+        </ul>
+    </div>
+    <!-- /nav -->
+
+    <div class="section-row">
+        <hr>
+    </div>
+
+    <div class="section-row">
+        <h1>Account</h1>
+        <ul class="nav-aside-menu">
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="section-row">
+        <hr>
+    </div>
+
+    <!-- social links -->
+    <div class="section-row">
+        <h1>Follow us</h1>
+        <ul class="nav-aside-social">
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+        </ul>
+    </div>
+    <!-- /social links -->
+
+    <!-- aside nav close -->
+    <button class="nav-aside-close"><i class="fa fa-times"></i></button>
+    <!-- /aside nav close -->
+</div>

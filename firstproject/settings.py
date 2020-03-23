@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'gpa.apps.GpaConfig',
     'docum.apps.DocumConfig',
     'sharing.apps.SharingConfig',
+    'home.apps.HomeConfig',
     'crispy_forms',
 ]
 
@@ -150,5 +151,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_POST = 587
 EMAIL_USE_TLS = True
 # Tài khoản và mật khẩu email
-EMAIL_HOST_USER = 'caube.caro.lokckok@gmail.com'#os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = 'duujxvpgzgisxlvu'#os.environ.get('EMAIL_PASS')
+#EMAIL_HOST_USER = 'caube.caro.lokckok@gmail.com'
+#EMAIL_HOST_PASSWORD = 'duujxvpgzgisxlvu'
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
