@@ -1,12 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 from PIL import Image
 
 # Create your models here.
 # Hàm tạo profile cho tài khoản
 class Profile(models.Model):
+
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    gender = models.CharField(max_length=1, null=True, choices=GENDER_CHOICES)
+    phone = PhoneNumberField(null=True, blank=False, unique=True)
     objects = models.Manager()
 
     def __str__(self):

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'docum.apps.DocumConfig',
     'sharing.apps.SharingConfig',
     'home.apps.HomeConfig',
+    'phonenumber_field',
     'crispy_forms',
 ]
 

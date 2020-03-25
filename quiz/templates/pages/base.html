@@ -13,17 +13,8 @@
 
 	{% endblock title %}
 
-	<!-- Google font -->
-	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:700%7CNunito:300,600" rel="stylesheet">
-
-	<!-- Bootstrap -->
-	<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-
-	<!-- Font Awesome Icon -->
-	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-
-	<!-- Custom stlylesheet -->
-	<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" />
+	<!--CSS-->
+	{% include "pages/css-import.html" %}
 
 </head>
 
@@ -166,10 +157,7 @@
 	<!-- /Footer -->
 
 	<!-- jQuery Plugins -->
-	<script src="{% static 'js/jquery.min.js' %}"></script>
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script src="{% static 'js/main.js' %}"></script>
-
+	{% include "pages/js-import.html" %}
 
 </body>
 
