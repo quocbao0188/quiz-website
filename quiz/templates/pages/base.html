@@ -14,7 +14,7 @@
 	{% endblock title %}
 
 	<!--CSS-->
-	{% include "pages/css-import.html" %}
+	{% include 'pages/css-import.html' %}
 
 </head>
 
@@ -53,7 +53,7 @@
 			<!-- /Main Nav -->
 
 			<!-- Aside Nav -->
-			{% include "pages/aside-nav.html" %}
+			{% include 'pages/aside-nav.html' %}
 			<!-- Aside Nav -->
 		</div>
 		<!-- /Nav -->
@@ -84,47 +84,7 @@
 				</div>
 
 				<div class="col-md-4">
-					<!-- ad -->
-					<div class="aside-widget text-center">
-						<a href="#" style="display: inline-block;margin: auto;">
-							<img class="img-responsive" src="./img/ad-1.jpg" alt="">
-						</a>
-					</div>
-					<!-- /ad -->
-
-					<!-- catagories 
-					<div class="aside-widget">
-						<div class="section-title">
-							<h2>Catagories</h2>
-						</div>
-						<div class="category-widget">
-							<ul>
-								<li><a href="#" class="cat-1">Web Design<span>340</span></a></li>
-								<li><a href="#" class="cat-2">JavaScript<span>74</span></a></li>
-								<li><a href="#" class="cat-4">JQuery<span>41</span></a></li>
-								<li><a href="#" class="cat-3">CSS<span>35</span></a></li>
-							</ul>
-						</div>
-					</div>
-					 /catagories -->
-
-					<!-- tags 
-					<div class="aside-widget">
-						<div class="tags-widget">
-							<ul>
-								<li><a href="#">Chrome</a></li>
-								<li><a href="#">CSS</a></li>
-								<li><a href="#">Tutorial</a></li>
-								<li><a href="#">Backend</a></li>
-								<li><a href="#">JQuery</a></li>
-								<li><a href="#">Design</a></li>
-								<li><a href="#">Development</a></li>
-								<li><a href="#">JavaScript</a></li>
-								<li><a href="#">Website</a></li>
-							</ul>
-						</div>
-					</div>
-					 /tags -->
+					{% include 'pages/widget.html' %}
 				</div>
 			</div>
 			<!-- /row -->
@@ -135,24 +95,7 @@
 
 	<!-- Footer -->
 	<footer id="footer">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-3">
-					<div class="footer-widget">
-						<h3 class="footer-title">Follow us</h3>
-						<ul class="footer-social">
-							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-						</ul>
-					</div>
-				</div>
-
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
+		{% include 'pages/footer.html' %}
 	</footer>
 	<!-- /Footer -->
 

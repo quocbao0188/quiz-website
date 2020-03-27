@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'sharing.apps.SharingConfig',
     'home.apps.HomeConfig',
     'phonenumber_field',
+    'rest_framework',
     'crispy_forms',
 ]
 
