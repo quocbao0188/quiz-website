@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from django.http import HttpResponse
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, ListView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
@@ -9,12 +9,12 @@ from django.contrib.auth.models import User
 # Create your views here.
 
 # List View Index
-# class QuizListView(ListView):
-#     model = Post
-#     # <app>/<model>_<viewtype>.html
-#     template_name = 'pages/quiz.html'
-#     context_object_name = 'doc'
-#     paginate_by = 3
+class QuizListView(ListView):
+    model = Post
+    # <app>/<model>_<viewtype>.html
+    template_name = 'pages/quiz.html'
+    context_object_name = 'doc'
+    paginate_by = 1
 
 # class QuizDetailView(DetailView):
 #     model = Post
@@ -61,12 +61,12 @@ class QuizLikeAPIToggle(APIView):
         return Response(data)
 
 
-def quiz(request):
-    template_name = 'pages/quiz.html'
-    content = {
-        'doc':  Post.objects.all()#.order_by('-date_posted')
-    }
-    return render(request, template_name, content)
+# def quiz(request):
+#     template_name = 'pages/quiz.html'
+#     content = {
+#         'doc':  Post.objects.all()#.order_by('-date_posted')
+#     }
+#     return render(request, template_name, content)
 
 def quiz_detail(request, slug=None):
     template_name = 'pages/quiz-detail.html'

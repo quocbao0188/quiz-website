@@ -1,12 +1,12 @@
 from django.urls import path
-from .views import QuizLikeRedirectView, QuizLikeAPIToggle
+from .views import QuizLikeRedirectView, QuizLikeAPIToggle, QuizListView
 from . import views
 from django.conf.urls import url
 
 urlpatterns = [
     # path('', views.index, name='home'),
-    # path('quiz/', QuizListView.as_view(), name='quiz'),
-    path('quiz/', views.quiz, name='quiz'),
+    path('quiz/', QuizListView.as_view(), name='quiz'),
+    # path('quiz/', views.quiz, name='quiz'),
     # path('quiz/<int:id>/', views.quiz_detail, name='quiz-detail'),
     # path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz-detail'),
     #path('quiz/<int:pk>/like/', QuizLikeRedirectView.as_view(), name='quiz-like'),
