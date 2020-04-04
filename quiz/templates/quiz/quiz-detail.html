@@ -1,0 +1,84 @@
+{% extends "pages/base_blank.html" %}
+{% load static %}
+
+{% block title %}
+<title>{{quiz_post.title}}</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Documents</li>
+                    <li>{{quiz_post.title}}</li>
+                </ul>
+                <h1>{{quiz_post.title}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+
+<!-- Page Header -->
+<div id="post-header" class="page-header">
+    <div class="background-img" style="background-image: url({{quiz_post.image.url}});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="post-meta">
+                    <a class="post-category cat-2" href="">{{ quiz_post.cata.cata_name }}</a>
+                    <span class="post-date">{{ quiz_post.date_posted|date:"F d, Y" }}</span>
+                </div>
+                <h1>{{ quiz_post.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+<!-- post -->
+<div class="section-row sticky-container">
+    <div class="main-post">
+        <figure class="figure-img">
+            <img class="img-responsive" src="{{ quiz_post.image.url }}" alt="">
+            <figcaption>{{ quiz_post.date_posted|date:"F d, Y" }}</figcaption>
+        </figure>
+        <p><a class='like-btn' data-href='{{ quiz_post.get_api_like_url }}' data-likes='{{ quiz_post.likes.count }}'
+                href='{{ quiz_post.get_like_url }}'>{{ quiz_post.likes.count }} Like</a></p>
+        <p>{{ quiz_post.content|safe|linebreaks }}</p>
+        
+        <div class="text-align:center">
+            
+            {% if user.is_authenticated %}
+                <a href="{{ quiz_post.trip }}"><img src="{% static 'img/download.png' %}" alt=""></a>
+            {% else %}
+                <h2>You have to login to download</h2>
+            {% endif %}
+                
+        </div>
+    </div>
+</div>
+
+<!-- <div class="col-md-12">
+    <div class="post post-row">
+        <a class="post-img" href=""><img src="{{ quiz_post.image.url }}" alt=""></a>
+        <div class="post-body">
+            <div class="post-meta">
+                <a class="post-category cat-3" href="">{{quiz_post.cata.cata_name}}</a>
+                <span class="post-date">{{ quiz_post.date_posted|date:"F d, Y" }}</span>
+            </div>
+            <h3 class="post-title"><a href="">{{ quiz_post.title }}</a></h3>
+            <p>Like {{ quiz_post.likes.count }}</p> <a href="{{ quiz_post.get_like_url }}">Like</a>
+            <p><a class='like-btn' data-href='{{ quiz_post.get_api_like_url }}' data-likes='{{ quiz_post.likes.count }}' href='{{ quiz_post.get_like_url }}'>{{ quiz_post.likes.count }} Like</a></p>
+            <p>{{ quiz_post.content|safe|linebreaks }}</p>
+        </div>
+    </div>
+</div> -->
+<!-- /post -->
+{% endblock body %}

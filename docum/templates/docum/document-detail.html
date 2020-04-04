@@ -1,0 +1,79 @@
+{% extends "base_blank.html" %}
+{% load static %}
+
+{% block title %}
+<title>{{doc.title}}</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'documents' %}">Documents</a></li>
+                    <li>{{doc.title}}</li>
+                </ul>
+                <h1>{{doc.title}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+
+<!-- Page Header -->
+<div id="post-header" class="page-header">
+    <div class="background-img" style="background-image: url({{doc.image.url}});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="post-meta">
+                    <a class="post-category cat-2" href="">{{ doc.catago.title }}</a>
+                    <span class="post-date">{{ doc.date_posted|date:"F d, Y" }}</span>
+                </div>
+                <h1>{{ doc.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+<!-- post -->
+<div class="section-row sticky-container">
+    <div class="main-post">
+        <figure class="figure-img">
+            <img class="img-responsive" src="{{ doc.image.url }}" alt="">
+            <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
+        </figure>
+        <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
+                href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
+        <p>{{ doc.content|safe|linebreaks }}</p>
+        
+        <div class="text-center">
+            
+            {% if user.is_authenticated %}
+                
+                {% if doc.credit >= 1 %}
+                <a class="btn btn-success btn-lg" href="#">Buy Now: {{ doc.credit }} Coin</a>
+                {% else %}
+                <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank">Download</a>
+                {% endif %}
+
+            {% else %}
+            <h4>You have to login to download</h4>
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="post-shares sticky-shares">
+        <a href="#" class="share-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="share-twitter"><i class="fa fa-twitter"></i></a>
+    </div>
+</div>
+<!-- /post -->
+{% endblock body %}

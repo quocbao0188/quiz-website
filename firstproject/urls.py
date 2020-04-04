@@ -24,7 +24,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
-    path('', include('quiz.urls')),
+    #path('', include('quiz.urls')),
     path('', include('gpa.urls')),
     path('', include('docum.urls')),
     path('', include('sharing.urls')),
@@ -44,5 +44,5 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 # Custom 404 and 500 pages template
-handler404 = 'quiz.views.view_404'
-handler500 = 'quiz.views.view_500'
+handler404 = 'home.views.view_404'
+handler500 = 'home.views.view_500'

@@ -1,4 +1,4 @@
-{% extends "pages/base_blank.html" %}
+{% extends "base_blank.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -35,7 +35,13 @@
                     </div>
                     <div class="media-body">
                         <div class="media-heading">
-                            <h3>{{ user.username }}</h3>
+                            
+                            {% if user.profile.acc_type == 'FREE' %}
+                            <h3>{{ user.username }} - Free account</h3>
+                            {% else %}
+                            <h3>{{ user.username }} - Premium account</h3>
+                            {% endif %}
+                            <p><strong>Hushare Coin: </strong>{{ user.profile.credit }}</p>
                             <p><strong>Date Joined: </strong>{{ user.date_joined }}</p>
                             <p><strong>Last Login: </strong>{{ user.last_login }}</p>
                         </div>
@@ -55,7 +61,9 @@
                     {{ p_form|crispy }}
                 </fieldset>
                 <div class="form-group">
-                    <button class="btn btn-warning" type="submit">Update</button>
+                    <div class="text-center">
+                        <button class="btn btn-warning" type="submit">Update</button>
+                    </div>
                 </div>
             </form>
         </div>
