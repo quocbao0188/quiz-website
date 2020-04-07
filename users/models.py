@@ -31,7 +31,7 @@ class Profile(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     acc_type = models.CharField(max_length=4, choices=PREMIUM_STATUS, default=FREE, verbose_name = "Account type")
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
-    phone = PhoneNumberField(unique=True, verbose_name = "Phone number")
+    phone = PhoneNumberField(verbose_name = "Phone number")
     objects = models.Manager()
 
     def __str__(self):

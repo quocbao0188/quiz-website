@@ -57,17 +57,22 @@
             
             {% if user.is_authenticated %}
                 
-                {% if doc.credit >= 1 %}
-                <a class="btn btn-success btn-lg" href="#">Buy Now: {{ doc.credit }} Coin</a>
-                {% else %}
+                {% if ord.exists and ord != None %}
                 <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank">Download</a>
+                {% else %}
+                
+                    {% if doc.credit >= 1 %}
+                    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }} Coin</a>
+                    {% else %}
+                    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Download for free</a>
+                    {% endif %}
+                        
                 {% endif %}
 
             {% else %}
             <h4>You have to login to download</h4>
             <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
             {% endif %}
-
         </div>
     </div>
     <div class="post-shares sticky-shares">

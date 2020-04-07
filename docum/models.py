@@ -30,7 +30,7 @@ class Document(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(null=True)
     like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
-    link_url = models.URLField(max_length=255)
+    link_url = models.URLField(max_length=255, unique=True)
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
     catago = models.ForeignKey(Docatago, on_delete=models.CASCADE, verbose_name = "Category")
 
@@ -59,3 +59,11 @@ class Document(models.Model):
             output_size = (750, 450)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(Document, blank=True)
+    order_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.user.username

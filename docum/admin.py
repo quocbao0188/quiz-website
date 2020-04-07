@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Document, Docatago
+from .models import Document, Docatago, Order
 # Register your models here.
 
 class DocAdmin(admin.ModelAdmin):
@@ -10,3 +10,5 @@ class DocAdmin(admin.ModelAdmin):
 admin.site.register(Document, DocAdmin)
 
 admin.site.register(Docatago)
+
+admin.site.register(Order)

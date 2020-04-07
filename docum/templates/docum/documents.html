@@ -32,7 +32,7 @@
         <a class="post-img" href="{% url 'doc-detail' docs.slug %}"><img src="{{ docs.image.url }}" alt=""></a>
         <div class="post-body">
             <div class="post-meta">
-                <a class="post-category cat-3" href="#">{{ docs.catago.title }}</a>
+                <a class="post-category cat-2" href="#">{{ docs.catago.title }}</a>
                 <span class="post-date">{{ docs.date_posted|date:"F d, Y" }}</span>
             </div>
             <h3 class="post-title"><a href="{% url 'doc-detail' docs.slug %}">{{ docs.title }}</a></h3>

@@ -20,15 +20,15 @@ from .models import Profile
 # Sử dụng form tự tạo
 class UserRegisterForm(forms.Form):
 
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('O', 'Other'),
-    ]
+    # GENDER_CHOICES = [
+    #     ('M', 'Male'),
+    #     ('F', 'Female'),
+    #     ('O', 'Other'),
+    # ]
 
     username = forms.CharField(label='User Name', max_length=20)
     email = forms.EmailField(label='Email')
-    gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES)
+    # gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES)
     #phone = PhoneNumberField(label='Phone number')
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput())

@@ -51,6 +51,11 @@
         </div>
 
         <div class="section-row">
+            <legend class="border_bottom mb_4">Menu</legend>
+            <a class="btn btn-info" href="{% url 'buy-detail' %}">Purchased</a>
+        </div>
+
+        <div class="section-row">
             <form method="POST" enctype="multipart/form-data">
                 <!--Bảo mật csrf-->
                 {% csrf_token %}
