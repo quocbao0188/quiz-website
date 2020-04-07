@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
+import requests
+from django.conf import settings
 # Create your views here.
 
 # def register(request):
@@ -25,9 +27,22 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid(): #is_valid phải viết hàm clean_name-method thì nó mới hiểu
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Your account { username } has been create ! You are now able to login')
+            ''' Begin reCAPTCHA validation '''
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            data = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+            result = r.json()
+            ''' End reCAPTCHA validation '''
+            if result['success']:
+                form.save()
+                username = form.cleaned_data.get('username')
+                messages.success(request, f'Your account { username } has been create ! You are now able to login')
+            else:
+                messages.success(request, f'Invalid reCAPTCHA. Please try again.')
+                
             return redirect('login')
     else:
         form = UserRegisterForm()

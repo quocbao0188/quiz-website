@@ -1,0 +1,53 @@
+{% extends "base_blank.html" %}
+
+{% block title %}
+<title>Purchased</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Purchased</li>
+                </ul>
+                <h1>Purchased</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+<!-- post -->
+<div class="col-md-12">
+    <div class="content-section">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Catagory</th>
+                <th scope="col">Download</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for q in obj.items.all %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ q.title }}</td>
+                    <td>{{ q.catago.title  }}</td>
+                    <td><a class="btn btn-primary" href="{{ q.link_url }}" target="_blank">Download</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+            
+    </div>
+</div>
+<!-- /post -->
+{% endblock body %}

@@ -3,6 +3,7 @@ from django import forms
 import re
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from phonenumber_field.formfields import PhoneNumberField
 from .models import Profile
 
 # from django.contrib.auth.forms import UserCreationForm
@@ -18,8 +19,17 @@ from .models import Profile
 
 # Sử dụng form tự tạo
 class UserRegisterForm(forms.Form):
+
+    # GENDER_CHOICES = [
+    #     ('M', 'Male'),
+    #     ('F', 'Female'),
+    #     ('O', 'Other'),
+    # ]
+
     username = forms.CharField(label='User Name', max_length=20)
     email = forms.EmailField(label='Email')
+    # gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES)
+    #phone = PhoneNumberField(label='Phone number')
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput())
 
@@ -44,6 +54,15 @@ class UserRegisterForm(forms.Form):
         except ObjectDoesNotExist:
             return username
         raise forms.ValidationError('Your username is exist')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return email
+        raise forms.ValidationError('Your email is exist')
+
     # Hàm lưu vào database
     def save(self):
         User.objects.create_user(username=self.cleaned_data['username'], email=self.cleaned_data['email'], password=self.cleaned_data['password1'])
@@ -62,4 +81,4 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['image']
+        fields = ['phone', 'gender', 'image']

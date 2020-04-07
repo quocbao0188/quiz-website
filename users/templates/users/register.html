@@ -1,4 +1,4 @@
-{% extends "pages/base.html" %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -18,7 +18,14 @@
                 {{ form|crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-success" type="submit">Sign Up</button>
+                <div class="text-center">
+                    <div class="g-recaptcha" data-sitekey="6LcJ_OQUAAAAAMZjFpGWVSvUg7SfzCRB9LfHNgry"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-success" type="submit">Sign Up</button>
+                </div>
             </div>
         </form>
         <div class="border-top pt-3">

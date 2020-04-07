@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'docum.apps.DocumConfig',
     'sharing.apps.SharingConfig',
     'home.apps.HomeConfig',
+    'phonenumber_field',
+    'rest_framework',
     'crispy_forms',
 ]
 
@@ -62,7 +64,7 @@ ROOT_URLCONF = 'firstproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,7 +86,7 @@ WSGI_APPLICATION = 'firstproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'quiz',
+        'NAME': 'hushare',
         'USER': 'root',
         'PASSWORD': '0188',
         'HOST': '127.0.0.1',
@@ -155,3 +157,5 @@ EMAIL_USE_TLS = True
 #EMAIL_HOST_PASSWORD = 'duujxvpgzgisxlvu'
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LcJ_OQUAAAAAMWLGwZn-f5Q83wsXvog2EnqR5_b'

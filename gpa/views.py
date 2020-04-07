@@ -3,4 +3,5 @@ from django.shortcuts import render
 # Create your views here.
 
 def calculator(request):
-    return render(request, 'pages/gpa.html')
+    template_name = 'gpa/gpa.html'
+    return render(request, template_name)
