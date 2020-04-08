@@ -63,7 +63,7 @@ class Document(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(Document, blank=True)
-    order_date = models.DateTimeField(default=timezone.now)
+    order_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username
