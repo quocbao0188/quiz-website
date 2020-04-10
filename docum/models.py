@@ -5,7 +5,6 @@ from decimal import Decimal
 from PIL import Image
 from django.urls import reverse
 from django.utils.text import slugify
-
 # Create your models here.
 class Docatago(models.Model):
     title = models.CharField(max_length=100)
@@ -23,14 +22,26 @@ class Docatago(models.Model):
         super(Docatago, self).save(*args, **kwargs) # call Django's save()
 
 class Document(models.Model):
+    
+    DOCUMENT = 'DOC'
+    LAB = 'LAB'
+    OTHER = 'OTH'
+
+    SPECIES_CHOICES = [
+        (DOCUMENT, 'Document'),
+        (LAB, 'Practice lab'),
+        (OTHER, 'Other'),
+    ]
+
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
+    species = models.CharField(max_length=3, choices=SPECIES_CHOICES, default=DOCUMENT, verbose_name = "Species")
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(null=True)
     like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
-    link_url = models.URLField(max_length=255, unique=True)
+    link_url = models.URLField(max_length=255, unique=True, verbose_name = "Direct link")
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
     catago = models.ForeignKey(Docatago, on_delete=models.CASCADE, verbose_name = "Category")
 
@@ -62,7 +73,7 @@ class Document(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(Document, blank=True)
+    items = models.ManyToManyField(Document, blank=True, verbose_name = "Items")
     order_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

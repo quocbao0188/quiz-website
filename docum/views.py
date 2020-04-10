@@ -17,7 +17,16 @@ from django.core.exceptions import ObjectDoesNotExist
 def document_list(request):
     template_name = 'docum/documents.html'
     post = {
-        'doc': Document.objects.all(),
+        'doc': Document.objects.filter(species='DOC'),
+        'cata': Docatago.objects.all().annotate(docs_count=Count('document'))[:5],
+        'most': Document.objects.order_by('-date_posted').all()[:5],
+    }
+    return render(request, template_name, post)
+
+def lab_list(request):
+    template_name = 'docum/lab.html'
+    post = {
+        'lab': Document.objects.filter(species='LAB'),
         'cata': Docatago.objects.all().annotate(docs_count=Count('document'))[:5],
         'most': Document.objects.order_by('-date_posted').all()[:5],
     }

@@ -1,47 +1,81 @@
-from django.db import models
-from django.utils import timezone
-from django.contrib.auth.models import User
-from PIL import Image
-from django.urls import reverse
-from django.utils.text import slugify
-# from docum.models import Catagories
-#from django.db.models.signals import pre_save
-# Create your models here.
+# from django.db import models
+# from django.contrib.auth.models import User
+# from django.template.defaultfilters import slugify
+# from django.db.models.signals import post_save, pre_save
+# from django.dispatch import receiver
 
-# class Post(models.Model):
-#     cata = models.ForeignKey(Catagories, on_delete=models.CASCADE)
-#     title = models.CharField(max_length=100)
+
+# class Quiz(models.Model):
+#     name = models.CharField(max_length=1000)
+#     questions_count = models.IntegerField(default=0)
+#     description = models.CharField(max_length=70)
+#     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 #     slug = models.SlugField(unique=True)
-#     content = models.TextField()
-#     date_posted = models.DateTimeField(default=timezone.now)
-#     author = models.ForeignKey(User, on_delete=models.CASCADE)
-#     image = models.ImageField(null=True)
-#     likes = models.ManyToManyField(User, blank=True, related_name='post_likes')
-#     trip = models.URLField(max_length=255)
-#     objects = models.Manager()
+#     roll_out = models.BooleanField(default=False)
+
+#     class Meta:
+#         ordering = [‘created’, ]
+#         verbose_name_plural =”Quizzes”
+
 
 #     def __str__(self):
-#         return self.title
+#         return self.name
 
-#     def save(self, *args, **kwargs):
-#         self.slug = slugify(self.title) # set the slug explicitly
-#         super(Post, self).save(*args, **kwargs) # call Django's save()
 
-#     def get_absolute_url(self):
-#         return reverse("quiz-detail", kwargs={"slug": self.slug})
+# class Question(models.Model):
+#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+#     label = models.CharField(max_length=1000)
+#     order = models.IntegerField(default=0)
 
-#     def get_like_url(self):
-#         return reverse("quiz-like", kwargs={"slug": self.slug})
 
-#     def get_api_like_url(self):
-#         return reverse("quiz-api-like", kwargs={"slug": self.slug})
+#     def __str__(self):
+#         return self.label
 
-#     # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 300px x 200px
-#     def save(self, **kwargs):
-#         # Ghi đè phương thức save()
-#         super().save()
-#         img = Image.open(self.image.path)
-#         if img.height > 750 or img.width > 450:
-#             output_size = (750, 450)
-#             img.thumbnail(output_size)
-#             img.save(self.image.path)
+
+# class Answer(models.Model):
+#     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+#     text = models.CharField(max_length=1000)
+#     is_correct = models.BooleanField(default=False)
+
+
+#     def __str__(self):
+#         return self.text
+
+
+# class QuizTakers(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+#     correct_answers = models.IntegerField(default=0)
+#     completed = models.BooleanField(default=False)
+#     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+#     def __str__(self):
+#         return self.user.username
+
+
+# class Response(models.Model):
+#     quiztaker = models.ForeignKey(QuizTakers, on_delete=models.CASCADE)
+#     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+#     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
+
+
+#     def __str__(self):
+#         return self.question.label
+
+
+# @receiver(post_save, sender=Quiz)
+# def set_default_quiz(sender, instance, created, **kwargs):
+#     quiz = Quiz.objects.filter(id=instance.id)
+#     quiz.update(questions_count=instance.question_set.filter(quiz=instance.pk).count())
+
+
+# @receiver(post_save, sender=Question)
+# def set_default(sender, instance, created, **kwargs):
+#     quiz = Quiz.objects.filter(id=instance.quiz.id)
+#     quiz.update(questions_count=instance.quiz.question_set.filter(quiz=instance.quiz.pk).count())
+
+
+# @receiver(pre_save, sender=Quiz)
+# def slugify_title(sender, instance, *args, **kwargs):
+#     instance.slug = slugify(instance.name)

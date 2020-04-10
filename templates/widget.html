@@ -23,6 +23,7 @@
 <!-- /catagories -->
 {% endif %}
 
+{% if most %}
 <!-- post widget -->
 <div class="aside-widget">
     <div class="section-title">
@@ -37,6 +38,15 @@
         </div>
     </div>
     {% endfor %}
-        
+
 </div>
 <!-- /post widget -->
+{% else %}
+<!-- catagories  -->
+<div class="aside-widget">
+    <div class="section-title">
+        <h2>Blank</h2>
+    </div>
+</div>
+<!-- /catagories -->
+{% endif %}
