@@ -7,7 +7,7 @@
     <div class="category-widget">
         <ul>
             {% for item in cata %}
-            <li><a href="#" class="cat-5">{{ item.title }}<span>{{ item.docs_count }}</span></a></li>
+            <li><a href="{% url 'catago-list' item.slug %}" class="cat-{{ forloop.counter }}">{{ item.title }}<span>{{ item.docs_count }}</span></a></li>
             {% endfor %}
         </ul>
     </div>

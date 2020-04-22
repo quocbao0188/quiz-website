@@ -1,0 +1,106 @@
+{% extends "base_blank.html" %}
+
+{% load static %}
+
+{% block title %}
+<title>Category</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Category</li>
+                </ul>
+                <h1>{{ catago.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+{% for docs in list_doc %}
+<!-- post -->
+<div class="col-md-12">
+    <div class="post post-row">
+        <a class="post-img" href="{{ docs.get_absolute_url }}"><img src="{{ docs.image.url }}" alt=""></a>
+        <div class="post-body">
+            <div class="post-meta">
+                <a class="post-category cat-1" >{{ docs.get_species_display }}</a>
+                <span class="post-date">{{ docs.date_posted|date:"F d, Y" }}</span>
+            </div>
+            <h3 class="post-title"><a href="{{ docs.get_absolute_url }}">{{ docs.title }}</a></h3>
+            <p>{{ docs.content|truncatechars:100 }}</p>
+            
+            {% if docs.credit >= 1 %}
+            <p><strong>Credit: </strong>{{ docs.credit }} Coin</p>
+            {% else %}
+            <p><strong>Free to download</strong></p>
+            {% endif %}
+                
+        </div>
+    </div>
+</div>
+<!-- /post -->
+{% endfor %}
+
+<nav aria-label="Page navigation">
+    
+    {% if lab.has_other_pages %}
+    <ul class="pagination">
+        
+        {% if lab.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" tabindex="-1">First</a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" href="?page={{ doc.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for i in lab.paginator.page_range %}
+            
+            {% if lab.number == i %}
+            <li class="page-item active">
+                <span class="page-link">
+                  {{ i }}
+                  <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+                
+        {% endfor %}
+        
+        
+        {% if lab.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ doc.next_page_number }}">Next</a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" href="?page={{ doc.paginator.num_pages }}">Last</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">Next</a>
+        </li>
+        {% endif %}
+        
+    </ul>
+    {% endif %}
+</nav>
+
+{% endblock body %}

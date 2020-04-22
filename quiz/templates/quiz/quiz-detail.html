@@ -1,8 +1,8 @@
-{% extends "pages/base_blank.html" %}
+{% extends "base_blank.html" %}
 {% load static %}
 
 {% block title %}
-<title>{{quiz_post.title}}</title>
+<title>{{ quiz.name }}</title>
 {% endblock title %}
 
 {% block page_header %}
@@ -13,10 +13,10 @@
             <div class="col-md-10">
                 <ul class="page-header-breadcrumb">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Documents</li>
-                    <li>{{quiz_post.title}}</li>
+                    <li><a href="{% url 'quiz' %}">Quiz</a></li>
+                    <li>{{ quiz.title }}</li>
                 </ul>
-                <h1>{{quiz_post.title}}</h1>
+                <h1>{{ quiz.title }}</h1>
             </div>
         </div>
     </div>
@@ -25,15 +25,15 @@
 
 <!-- Page Header -->
 <div id="post-header" class="page-header">
-    <div class="background-img" style="background-image: url({{quiz_post.image.url}});"></div>
+    <div class="background-img" style="background-image: url({{quiz.image.url}});"></div>
     <div class="container">
         <div class="row">
             <div class="col-md-10">
                 <div class="post-meta">
-                    <a class="post-category cat-2" href="">{{ quiz_post.cata.cata_name }}</a>
-                    <span class="post-date">{{ quiz_post.date_posted|date:"F d, Y" }}</span>
+                    <a class="post-category cat-2" href="">{{ quiz.category_quiz }}</a>
+                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
                 </div>
-                <h1>{{ quiz_post.title }}</h1>
+                <h1>{{ quiz.title }}</h1>
             </div>
         </div>
     </div>
@@ -44,41 +44,70 @@
 {% block body %}
 <!-- post -->
 <div class="section-row sticky-container">
+    <div>Submission time <span id="time"></span> minutes!</div>
     <div class="main-post">
-        <figure class="figure-img">
-            <img class="img-responsive" src="{{ quiz_post.image.url }}" alt="">
-            <figcaption>{{ quiz_post.date_posted|date:"F d, Y" }}</figcaption>
-        </figure>
-        <p><a class='like-btn' data-href='{{ quiz_post.get_api_like_url }}' data-likes='{{ quiz_post.likes.count }}'
-                href='{{ quiz_post.get_like_url }}'>{{ quiz_post.likes.count }} Like</a></p>
-        <p>{{ quiz_post.content|safe|linebreaks }}</p>
-        
-        <div class="text-align:center">
-            
-            {% if user.is_authenticated %}
-                <a href="{{ quiz_post.trip }}"><img src="{% static 'img/download.png' %}" alt=""></a>
-            {% else %}
-                <h2>You have to login to download</h2>
-            {% endif %}
-                
-        </div>
+        <form name="quiz" class="form" id="myquiz" action="" method="GET">
+            {% csrf_token %}
+            {% for q in questions %}
+            <legend>Question {{ forloop.counter }}: {{ q.label }}</legend>
+            <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
+            {% for a in q.answer %}
+            <div class="form-group">
+                <input class="form-check-input" type="radio" name="choise-{{ q.aidi }}" id="{{ a.pk }}"
+                    value="{{ a.pk }}">
+                <label class="form-check-label" for="{{ a.pk }}">{{ a.text }}</label>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-success" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- <div class="col-md-12">
-    <div class="post post-row">
-        <a class="post-img" href=""><img src="{{ quiz_post.image.url }}" alt=""></a>
-        <div class="post-body">
-            <div class="post-meta">
-                <a class="post-category cat-3" href="">{{quiz_post.cata.cata_name}}</a>
-                <span class="post-date">{{ quiz_post.date_posted|date:"F d, Y" }}</span>
-            </div>
-            <h3 class="post-title"><a href="">{{ quiz_post.title }}</a></h3>
-            <p>Like {{ quiz_post.likes.count }}</p> <a href="{{ quiz_post.get_like_url }}">Like</a>
-            <p><a class='like-btn' data-href='{{ quiz_post.get_api_like_url }}' data-likes='{{ quiz_post.likes.count }}' href='{{ quiz_post.get_like_url }}'>{{ quiz_post.likes.count }} Like</a></p>
-            <p>{{ quiz_post.content|safe|linebreaks }}</p>
-        </div>
-    </div>
-</div> -->
+<script>
+    function startTimer(duration, display) {
+        var start = Date.now(),
+            diff,
+            minutes,
+            seconds;
+        function timer() {
+            // get the number of seconds that have elapsed since 
+            // startTimer() was called
+            diff = duration - (((Date.now() - start) / 1000) | 0);
+
+            // does the same job as parseInt truncates the float
+            minutes = (diff / 60) | 0;
+            seconds = (diff % 60) | 0;
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (diff <= 0) {
+                // add one second so that the count down starts at the full duration
+                // example 05:00 not 04:59
+                start = Date.now() + 1000;
+            }
+        };
+        // we don't want to wait a full second before the timer starts
+        timer();
+        setInterval(timer, 1000);
+    }
+
+    window.onload = function () {
+        var fiveMinutes = 60 * {{ quiz.time }},
+            display = document.querySelector('#time');
+        startTimer(fiveMinutes, display);
+        if(display < 1){
+            clearInterval(timer);
+            document.quiz.submit();
+        }
+    };
+</script>
 <!-- /post -->
 {% endblock body %}

@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'gpa.apps.GpaConfig',
     'docum.apps.DocumConfig',
     'home.apps.HomeConfig',
+    'search.apps.SearchConfig',
     'phonenumber_field',
     'rest_framework',
     'crispy_forms',
+    'nested_admin',
 ]
 
 MIDDLEWARE = [

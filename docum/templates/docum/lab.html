@@ -14,9 +14,9 @@
             <div class="col-md-10">
                 <ul class="page-header-breadcrumb">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Labs</li>
+                    <li>Practice Labs</li>
                 </ul>
-                <h1>Labs</h1>
+                <h1>Practice Labs</h1>
             </div>
         </div>
     </div>
@@ -29,13 +29,14 @@
 <!-- post -->
 <div class="col-md-12">
     <div class="post post-row">
-        <a class="post-img" href="{% url 'doc-detail' items.slug %}"><img src="{{ items.image.url }}" alt=""></a>
+        <a class="post-img" href="{{ items.get_absolute_url }}"><img src="{{ items.image.url }}" alt=""></a>
         <div class="post-body">
             <div class="post-meta">
-                <a class="post-category cat-2" href="#">{{ items.catago.title }}</a>
+                <a class="post-category cat-2" href="{% url 'catago-list' items.catago.slug %}">{{ items.catago.title }}</a>
+                <a class="post-category cat-4" >{{ items.get_species_display }}</a>
                 <span class="post-date">{{ items.date_posted|date:"F d, Y" }}</span>
             </div>
-            <h3 class="post-title"><a href="{% url 'doc-detail' items.slug %}">{{ items.title }}</a></h3>
+            <h3 class="post-title"><a href="{{ items.get_absolute_url }}">{{ items.title }}</a></h3>
             <p>{{ items.content|truncatechars:100 }}</p>
             
             {% if items.credit >= 1 %}
@@ -50,26 +51,57 @@
 <!-- /post -->
 {% endfor %}
 
-{% if is_paginated %}
+<nav aria-label="Page navigation">
+    
+    {% if lab.has_other_pages %}
+    <ul class="pagination">
+        
+        {% if lab.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" tabindex="-1">First</a>
+        </li>
 
-{% if page_obj.has_previous %}
-<a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-{% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ lab.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for i in lab.paginator.page_range %}
+            
+            {% if lab.number == i %}
+            <li class="page-item active">
+                <span class="page-link">
+                  {{ i }}
+                  <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+                
+        {% endfor %}
+        
+        
+        {% if lab.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ lab.next_page_number }}">Next</a>
+        </li>
 
-{% for num in page_obj.paginator.page_range %}
-{% if page_obj.number == num %}
-<a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-<a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-{% endif %}
-{% endfor %}
-
-{% if page_obj.has_next %}
-<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-{% endif %}
-
-{% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ lab.paginator.num_pages }}">Last</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">Next</a>
+        </li>
+        {% endif %}
+        
+    </ul>
+    {% endif %}
+</nav>
 
 {% endblock body %}

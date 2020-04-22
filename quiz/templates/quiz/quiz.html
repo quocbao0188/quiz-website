@@ -1,4 +1,4 @@
-{% extends "pages/base_blank.html" %}
+{% extends "base_blank.html" %}
 
 {% load static %}
 
@@ -25,59 +25,25 @@
 {% endblock page_header %}
 
 {% block body %}
-{% for post in doc %}
+{% for quizs in quiz %}
 <!-- post -->
 <div class="col-md-12">
     <div class="post post-row">
-        <a class="post-img" href="{% url 'quiz-detail' post.slug %}"><img src="{{ post.image.url }}" alt=""></a>
+        <a class="post-img" href="{% url 'quiz-detail' quizs.slug %}"><img src="{{ quizs.image.url }}" alt=""></a>
         <div class="post-body">
             <div class="post-meta">
-                <a class="post-category cat-3" href="#">{{ post.cata.cata_name }}</a>
-                <span class="post-date">{{ post.date_posted|date:"F d, Y" }}</span>
+                <a class="post-category cat-3" href="#">{{ quizs.category_quiz }}</a>
+                <span class="post-date">{{ quizs.created|date:"F d, Y" }}</span>
             </div>
-            <h3 class="post-title"><a href="{% url 'quiz-detail' post.slug %}">{{ post.title }}</a></h3>
-            <p>{{ post.content|truncatechars:30 }}</p>
+            <h3 class="post-title"><a href="{% url 'quiz-detail' quizs.slug %}">{{ quizs.title }}</a></h3>
+            <p><strong>Number of questions: </strong>{{ quizs.question_count }} | <strong>Time: </strong>{{ quizs.time }} minute</p>
+            <p>{{ quizs.description|truncatechars:30 }}</p>
         </div>
     </div>
 </div>
 <!-- /post -->
 {% endfor %}
 
-{% if is_paginated %}
 
-{% if page_obj.has_previous %}
-<a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-{% endif %}
-
-{% for num in page_obj.paginator.page_range %}
-{% if page_obj.number == num %}
-<a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-<a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-{% endif %}
-{% endfor %}
-
-{% if page_obj.has_next %}
-<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-{% endif %}
-
-{% endif %}
 
 {% endblock body %}
-
-
-{% block cata %}
-<!-- tags  -->
-<div class="aside-widget">
-    <div class="tags-widget">
-        <ul>
-            {% for item in doc %}
-            <li><a href="#">{{item.cata.cata_tag}}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-<!-- /tags -->
-{% endblock cata %}
