@@ -43,13 +43,13 @@
 
 {% block body %}
 <!-- post -->
-<div class="section-row sticky-container">
-    <div>Submission time <span id="time"></span> minutes!</div>
-    <div class="main-post">
-        <form name="quiz" class="form" id="myquiz" action="" method="GET">
+<div>
+        <h1>Submission time: <span style="color: red; font-weight: bold;" id="time"></span></h1>
+    <div>
+        <form name="quiz" class="form" id="myquiz" action="" method="POST">
             {% csrf_token %}
             {% for q in questions %}
-            <legend>Question {{ forloop.counter }}: {{ q.label }}</legend>
+            <legend style="color: brown;"><strong>{{ forloop.counter }}: </strong>{{ q.label }}</legend>
             <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
             {% for a in q.answer %}
             <div class="form-group">
@@ -61,7 +61,7 @@
             {% endfor %}
             <div class="form-group">
                 <div class="text-center">
-                    <button class="btn btn-success" type="submit">Submit</button>
+                    <button class="btn btn-success btn-lg" type="submit">Submit</button>
                 </div>
             </div>
         </form>
@@ -98,15 +98,11 @@
         timer();
         setInterval(timer, 1000);
     }
-
     window.onload = function () {
-        var fiveMinutes = 60 * {{ quiz.time }},
+        var time = 60 * {{ quiz.time }},
             display = document.querySelector('#time');
-        startTimer(fiveMinutes, display);
-        if(display < 1){
-            clearInterval(timer);
-            document.quiz.submit();
-        }
+        startTimer(time, display);
+        setTimeout(function(){ document.quiz.submit(); }, time*1000);
     };
 </script>
 <!-- /post -->

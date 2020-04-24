@@ -30,7 +30,7 @@ class Quiz(models.Model):
         verbose_name_plural = 'Quizzes'
 
     def __str__(self):
-        return self.name
+        return self.title
 
     # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 300px x 200px
     def save(self, **kwargs):
@@ -63,6 +63,9 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
+    
+
+
 
 class QuizProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -82,4 +85,4 @@ class AttemptedQuestion(models.Model):
 
 @receiver(pre_save, sender=Quiz)
 def slugify_title(sender, instance, *args, **kwargs):
-    instance.slug = slugify(instance.name)
+    instance.slug = slugify(instance.title)

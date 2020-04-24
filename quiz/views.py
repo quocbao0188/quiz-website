@@ -7,8 +7,8 @@ from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
 from django.db.models import Count
 from .models import Quiz, Question, Answer, QuizProfile, AttemptedQuestion, CategoryQuiz
-# from .forms import QuestionForm
-# Create your views here.
+from django.contrib.auth.decorators import login_required
+
 
 def quiz_list(request):
     template_name = 'quiz/quiz.html'
@@ -20,11 +20,28 @@ def quiz_list(request):
     }
     return render(request, template_name, context)
 
+def pre_quiz(request, slug=None):
+    template_name = 'quiz/pre-detail.html'
+    quiz = get_object_or_404(Quiz, slug=slug)
+    question_count = Question.objects.filter(quiz_id=quiz.id).count()
+    context = {
+        'quiz': quiz,
+        'question_count': question_count
+        # 'cata': CategoryQuiz.objects.all().annotate(docs_count=Count('quizs'))[:5],
+        # 'most': Quiz.objects.order_by('-created').all()[:5],
+    }
+    return render(request, template_name, context)
+
+@login_required
 def quiz_detail(request, slug=None):
+    list_answer = []
+    attempted_list = []
     questions = []  #Tạo list chứa các câu hỏi để gởi xuống html
     template_name = 'quiz/quiz-detail.html'
     quiz = get_object_or_404(Quiz, slug=slug)   # Lấy cuộc thi được chọn
     que = Question.objects.filter(quiz_id=quiz.id)  # Chọn những câu hỏi trong kì thi
+    questions_count = que.count()
+
     for q in que:
         ans = Answer.objects.filter(question_id=q.id)   # Chọn bộ những câu trả lời thuộc câu hỏi
         question = {
@@ -36,15 +53,38 @@ def quiz_detail(request, slug=None):
 
     # quiz_profile, created = QuizProfile.objects.get_or_create(user=request.user)
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         for z in que:
-            answer_data = Answer.objects.filter(question_id=z.id)
-            question_id = request.GET.get('question-' + str(z.id))
-            choise_id = request.GET.get('choise-' + str(z.id))
-            print(choise_id)
+            answers = Answer.objects.filter(question_id=z.id)
+            for answer in answers:
+                if answer.is_correct is True:
+                    list_answer.append(answer.id)
+                else:
+                    pass
+                
+            # question_id = request.GET.get('question-' + str(z.id))
+            choise_id = request.POST.get('choise-' + str(z.id))
+            # Ép kiểu NoneType
+            if choise_id is None:
+                choise_id = "0"
 
-        
+            attempted_list.append(choise_id)
 
+        results = list(map(int, attempted_list)) # Ép kiểu String to Int và đưa vào list
+        same_values = set(list_answer) & set(results) # so sanh
+        totail_correct = len(same_values)
+        point = totail_correct/questions_count
+        percent_correct = point*10
+        print(percent_correct)
+        context = {
+            'questions_count': questions_count,
+            'totail_correct': totail_correct,
+            'score': percent_correct,
+            'quiz': quiz
+        }
+        return render(request, 'quiz/quiz-result.html', context)
+    else:
+        pass       
     context = {
         'quiz': quiz,
         'questions': questions

@@ -1,0 +1,68 @@
+{% extends "base_blank.html" %}
+{% load static %}
+
+{% block title %}
+<title>{{quiz.title}}</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'documents' %}">Documents</a></li>
+                    <li>{{quiz.title}}</li>
+                </ul>
+                <h1>{{quiz.title}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+
+<!-- Page Header -->
+<div id="post-header" class="page-header">
+    <div class="background-img" style="background-image: url({{quiz.image.url}});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="post-meta">
+                    <a class="post-category cat-2" href="#">{{ quiz.category_quiz }}</a>
+                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                </div>
+                <h1>{{ quiz.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+<!-- post -->
+<figure class="figure-img">
+    <img class="img-responsive" src="{{ quiz.image.url }}" alt="">
+    <figcaption>{{ quiz.created|date:"F d, Y" }}</figcaption>
+</figure>
+<h2>Number of questions: <strong style="color: brown;">{{ question_count }}</strong></h2>
+<h2>Time: <strong style="color: brown;">{{ quiz.time }} minutes</strong></h2>
+<!-- <div class="fb-like" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-width="" data-layout="standard" data-action="like" data-size="large" data-share="true"></div> -->
+<!-- <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
+                href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p> -->
+<p>{{ quiz.description|safe|linebreaks }}</p>
+<div class="form-group">
+    <div class="text-center">
+        <a class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}">Start</a>
+    </div>
+</div>
+<!-- share -->
+<!-- <div class="post-shares sticky-shares" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-layout="button" data-size="large">
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A8000%2Fdocument%2Fquiz-1%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i></a>
+    <!-- /share -->
+
+<!-- /post -->
+<!-- <div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time" data-numposts="5" data-width="100%"></div> -->
+{% endblock body %}
