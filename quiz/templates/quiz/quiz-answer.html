@@ -1,0 +1,68 @@
+{% extends "base_blank.html" %}
+{% load static %}
+
+{% block title %}
+<title>{{ quiz.name }}</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'quiz' %}">Quiz</a></li>
+                    <li>{{ quiz.title }}</li>
+                </ul>
+                <h1>{{ quiz.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+
+<!-- Page Header -->
+<div id="post-header" class="page-header">
+    <div class="background-img" style="background-image: url({{quiz.image.url}});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="post-meta">
+                    <a class="post-category cat-2" href="">{{ quiz.category_quiz }}</a>
+                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                </div>
+                <h1>{{ quiz.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+<!-- post -->
+<form name="quiz" class="form" id="myquiz" action="" method="">
+    {% for q in questions %}
+    <legend style="color: brown;"><strong>{{ forloop.counter }}: {{ q.label }}</strong></legend>
+    <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
+    {% for a in q.answer %}
+    <div class="form-group">
+        {% if a.is_correct is True %}
+        <p style="background-color: rgba(11, 173, 11, 0.219); font-size:20px; color: black; "><strong>{{ a.text }}</strong></p>
+        {% else %}
+        <p style="font-size:20px;">{{ a.text }}</p>
+        {% endif %}
+            
+    </div>
+    {% endfor %}
+    {% endfor %}
+    <!-- <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-success btn-lg" type="submit">Submit</button>
+                </div>
+            </div> -->
+</form>
+<!-- /post -->
+{% endblock body %}

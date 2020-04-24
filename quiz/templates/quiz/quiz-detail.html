@@ -49,7 +49,7 @@
         <form name="quiz" class="form" id="myquiz" action="" method="POST">
             {% csrf_token %}
             {% for q in questions %}
-            <legend style="color: brown;"><strong>{{ forloop.counter }}: </strong>{{ q.label }}</legend>
+            <legend style="color: brown;"><strong>{{ forloop.counter }}: {{ q.label }}</strong></legend>
             <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
             {% for a in q.answer %}
             <div class="form-group">

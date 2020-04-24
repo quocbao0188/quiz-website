@@ -8,7 +8,7 @@ def search_docs(request):
         query = request.GET.get('q')
         submitbutton = request.GET.get('submit')
         if query is not None:
-            lookups = Q(title__icontains=query)|Q(content__icontains=query)|Q(species__icontains=query)
+            lookups = Q(title__icontains=query)|Q(species__icontains=query)
             results = Document.objects.filter(lookups).distinct()
             content = {
                 'results': results,

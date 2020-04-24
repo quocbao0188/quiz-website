@@ -20,6 +20,7 @@ def quiz_list(request):
     }
     return render(request, template_name, context)
 
+
 def pre_quiz(request, slug=None):
     template_name = 'quiz/pre-detail.html'
     quiz = get_object_or_404(Quiz, slug=slug)
@@ -32,18 +33,21 @@ def pre_quiz(request, slug=None):
     }
     return render(request, template_name, context)
 
+
 @login_required
 def quiz_detail(request, slug=None):
     list_answer = []
     attempted_list = []
-    questions = []  #Tạo list chứa các câu hỏi để gởi xuống html
+    questions = []  # Tạo list chứa các câu hỏi để gởi xuống html
     template_name = 'quiz/quiz-detail.html'
     quiz = get_object_or_404(Quiz, slug=slug)   # Lấy cuộc thi được chọn
-    que = Question.objects.filter(quiz_id=quiz.id)  # Chọn những câu hỏi trong kì thi
+    # Chọn những câu hỏi trong kì thi
+    que = Question.objects.filter(quiz_id=quiz.id)
     questions_count = que.count()
 
     for q in que:
-        ans = Answer.objects.filter(question_id=q.id)   # Chọn bộ những câu trả lời thuộc câu hỏi
+        # Chọn bộ những câu trả lời thuộc câu hỏi
+        ans = Answer.objects.filter(question_id=q.id)
         question = {
             'label': q.label,
             'aidi': q.id,
@@ -61,7 +65,7 @@ def quiz_detail(request, slug=None):
                     list_answer.append(answer.id)
                 else:
                     pass
-                
+
             # question_id = request.GET.get('question-' + str(z.id))
             choise_id = request.POST.get('choise-' + str(z.id))
             # Ép kiểu NoneType
@@ -70,8 +74,9 @@ def quiz_detail(request, slug=None):
 
             attempted_list.append(choise_id)
 
-        results = list(map(int, attempted_list)) # Ép kiểu String to Int và đưa vào list
-        same_values = set(list_answer) & set(results) # so sanh
+        # Ép kiểu String to Int và đưa vào list
+        results = list(map(int, attempted_list))
+        same_values = set(list_answer) & set(results)  # so sanh
         totail_correct = len(same_values)
         point = totail_correct/questions_count
         percent_correct = point*10
@@ -84,7 +89,32 @@ def quiz_detail(request, slug=None):
         }
         return render(request, 'quiz/quiz-result.html', context)
     else:
-        pass       
+        pass
+    context = {
+        'quiz': quiz,
+        'questions': questions
+    }
+    return render(request, template_name, context)
+
+
+def see_answer(request, slug=None):
+    questions = []  # Tạo list chứa các câu hỏi để gởi xuống html
+    template_name = 'quiz/quiz-answer.html'
+    quiz = get_object_or_404(Quiz, slug=slug)   # Lấy cuộc thi được chọn
+    # Chọn những câu hỏi trong kì thi
+    que = Question.objects.filter(quiz_id=quiz.id)
+    questions_count = que.count()
+
+    for q in que:
+        # Chọn bộ những câu trả lời thuộc câu hỏi
+        ans = Answer.objects.filter(question_id=q.id)
+        question = {
+            'label': q.label,
+            'aidi': q.id,
+            'answer': ans
+        }
+        questions.append(question)
+
     context = {
         'quiz': quiz,
         'questions': questions
@@ -96,7 +126,7 @@ def quiz_detail(request, slug=None):
 #     template_name = 'quiz/quiz-detail.html'
 #     quiz = get_object_or_404(Quiz, slug=slug)  # Lấy cuộc thi được chọn
 #     que = Question.objects.filter(quiz_id=quiz.id)         # Chọn những câu hỏi trong kì thi
-#     for q in que:               
+#     for q in que:
 #         ans = Answer.objects.filter(question_id=q.id)  # Chọn bộ những câu trả lời thuộc câu hỏi
 #         question = {
 #             'label': q.label,
@@ -186,7 +216,6 @@ def quiz_detail(request, slug=None):
 # #     model = Catagories
 # #     template_name = 'pages/widget.html'
 # #     context_object_name = 'catalo'
-    
 
 
 # def quiz_detail(request, slug=None):
@@ -196,7 +225,6 @@ def quiz_detail(request, slug=None):
 #         'cata': Catagories.objects.all().annotate(posts_count=Count('post'))
 #     }
 #     return render(request, template_name, post)
-
 
 
 # # def view_404(request, Exception):
@@ -210,4 +238,3 @@ def quiz_detail(request, slug=None):
 # #         'title': 'Page no found'
 # #     }
 # #     return render(request, 'pages/error.html', content)
-

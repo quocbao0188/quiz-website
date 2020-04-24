@@ -20,7 +20,7 @@ def document_list(request):
     doc_list = Document.objects.filter(species='DOC')
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(doc_list, 1)
+    paginator = Paginator(doc_list, 5)
 
     try:
         docs = paginator.page(page)
@@ -40,7 +40,7 @@ def lab_list(request):
     template_name = 'docum/lab.html'
     labs_list = Document.objects.filter(species='LAB')
     page = request.GET.get('page', 1)
-    paginator = Paginator(labs_list, 1)
+    paginator = Paginator(labs_list, 5)
 
     try:
         labs = paginator.page(page)
