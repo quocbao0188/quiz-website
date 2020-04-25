@@ -32,6 +32,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Catagory</th>
+                <th scope="col">Species</th>
                 <th scope="col">Download</th>
               </tr>
             </thead>
@@ -41,6 +42,7 @@
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ q.title }}</td>
                     <td>{{ q.catago.title  }}</td>
+                    <td>{{ q.get_species_display }}</td>
                     <td><a class="btn btn-primary" href="{{ q.link_url }}" target="_blank">Download</a></td>
                 </tr>
             {% endfor %}

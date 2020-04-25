@@ -30,7 +30,9 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="post-meta">
-                    <a class="post-category cat-2" href="">{{ doc.catago.title }}</a>
+                    <a class="post-category cat-2"
+                        href="{% url 'catago-list' doc.catago.slug %}">{{ doc.catago.title }}</a>
+                    <a class="post-category cat-3">{{ doc.get_species_display }}</a>
                     <span class="post-date">{{ doc.date_posted|date:"F d, Y" }}</span>
                 </div>
                 <h1>{{ doc.title }}</h1>
@@ -43,42 +45,40 @@
 
 {% block body %}
 <!-- post -->
-<div class="section-row sticky-container">
-    <div class="main-post">
-        <figure class="figure-img">
-            <img class="img-responsive" src="{{ doc.image.url }}" alt="">
-            <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
-        </figure>
-        <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
-                href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
-        <p>{{ doc.content|safe|linebreaks }}</p>
-        
-        <div class="text-center">
-            
-            {% if user.is_authenticated %}
-                
-                {% if ord.exists and ord != None %}
-                <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank">Download</a>
-                {% else %}
-                
-                    {% if doc.credit >= 1 %}
-                    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }} Coin</a>
-                    {% else %}
-                    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Download for free</a>
-                    {% endif %}
-                        
-                {% endif %}
 
-            {% else %}
-            <h4>You have to login to download</h4>
-            <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
-            {% endif %}
-        </div>
-    </div>
-    <div class="post-shares sticky-shares">
-        <a href="#" class="share-facebook"><i class="fa fa-facebook"></i></a>
-        <a href="#" class="share-twitter"><i class="fa fa-twitter"></i></a>
-    </div>
+<figure class="figure-img">
+    <img class="img-responsive" src="{{ doc.image.url }}" alt="">
+    <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
+</figure>
+<div class="fb-like" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-width="" data-layout="standard"
+    data-action="like" data-size="large" data-share="true"></div>
+<p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
+        href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
+<p>{{ doc.content|safe|linebreaks }}</p>
+
+<div class="text-center">
+
+    {% if user.is_authenticated %}
+
+    {% if ord.exists and ord != None %}
+    <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank">Download</a>
+    {% else %}
+
+    {% if doc.credit >= 1 %}
+    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }} Coin</a>
+    {% else %}
+    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Download for free</a>
+    {% endif %}
+
+    {% endif %}
+
+    {% else %}
+    <h4>You have to login to download</h4>
+    <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
+    {% endif %}
 </div>
+
 <!-- /post -->
+<div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
+    data-numposts="5" data-width="100%"></div>
 {% endblock body %}

@@ -19,15 +19,17 @@ from django.conf.urls import handler404, handler500
 from django.conf.urls.static import static
 from django.conf import settings
 from users import views as user_views
+from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^_nested_admin/', include('nested_admin.urls')),
     path('', include('home.urls')),
-    #path('', include('quiz.urls')),
+    path('', include('quiz.urls')),
     path('', include('gpa.urls')),
     path('', include('docum.urls')),
-    path('', include('sharing.urls')),
+    url(r'^search/', include(('search.urls', 'search'), namespace='search')),
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),

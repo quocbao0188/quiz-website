@@ -7,7 +7,7 @@
     <div class="category-widget">
         <ul>
             {% for item in cata %}
-            <li><a href="#" class="cat-5">{{ item.title }}<span>{{ item.docs_count }}</span></a></li>
+            <li><a href="{% url 'catago-list' item.slug %}" class="cat-{{ forloop.counter }}">{{ item.title }}<span>{{ item.docs_count }}</span></a></li>
             {% endfor %}
         </ul>
     </div>
@@ -15,14 +15,15 @@
 <!-- /catagories -->
 {% else %}
 <!-- catagories  -->
-<div class="aside-widget">
+<!-- <div class="aside-widget">
     <div class="section-title">
         <h2>Blank</h2>
     </div>
-</div>
+</div> -->
 <!-- /catagories -->
 {% endif %}
 
+{% if most %}
 <!-- post widget -->
 <div class="aside-widget">
     <div class="section-title">
@@ -37,6 +38,15 @@
         </div>
     </div>
     {% endfor %}
-        
+
 </div>
 <!-- /post widget -->
+{% else %}
+<!-- catagories  -->
+<!-- <div class="aside-widget">
+    <div class="section-title">
+        <h2>Blank</h2>
+    </div>
+</div> -->
+<!-- /catagories -->
+{% endif %}

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,11 +43,12 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'gpa.apps.GpaConfig',
     'docum.apps.DocumConfig',
-    'sharing.apps.SharingConfig',
     'home.apps.HomeConfig',
+    'search.apps.SearchConfig',
     'phonenumber_field',
     'rest_framework',
     'crispy_forms',
+    'nested_admin',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'firstproject.urls'
@@ -91,6 +94,7 @@ DATABASES = {
         'PASSWORD': '0188',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
     }
 }
 
@@ -117,7 +121,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'vi-VI'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
@@ -127,6 +132,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = (
+   os.path.join(BASE_DIR, 'locale'),
+)
+
+LANGUAGES = (
+    ('vi', _('Vietnamese')),
+    ('en', _('English')),
+)
+
+MULTILINGUAL_LANGUAGES = (
+    "en-us",
+    "vi",
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
