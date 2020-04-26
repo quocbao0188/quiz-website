@@ -50,10 +50,15 @@
     <img class="img-responsive" src="{{ doc.image.url }}" alt="">
     <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
 </figure>
+
+<!-- facebook like -->
 <div class="fb-like" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-width="" data-layout="standard"
     data-action="like" data-size="large" data-share="true"></div>
+<!-- /facebook like -->
+
 <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
         href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
+
 <p>{{ doc.content|safe|linebreaks }}</p>
 
 <div class="text-center">
@@ -79,6 +84,10 @@
 </div>
 
 <!-- /post -->
+
+<!-- comment -->
 <div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
     data-numposts="5" data-width="100%"></div>
+<!-- /comment -->
+
 {% endblock body %}
