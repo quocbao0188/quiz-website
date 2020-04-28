@@ -6,9 +6,8 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
 from django.db.models import Count
-from .models import Quiz, Question, Answer, QuizProfile, AttemptedQuestion, CategoryQuiz
+from .models import Quiz, Question, Answer, Transcript, CategoryQuiz
 from django.contrib.auth.decorators import login_required
-
 
 def quiz_list(request):
     template_name = 'quiz/quiz.html'
@@ -43,6 +42,7 @@ def quiz_detail(request, slug=None):
     quiz = get_object_or_404(Quiz, slug=slug)   # Lấy cuộc thi được chọn
     # Chọn những câu hỏi trong kì thi
     que = Question.objects.filter(quiz_id=quiz.id)
+    transcript_test = Transcript.objects.filter(user=request.user, quiz_item=quiz.id)
     questions_count = que.count()
 
     for q in que:
@@ -55,41 +55,80 @@ def quiz_detail(request, slug=None):
         }
         questions.append(question)
 
-    # quiz_profile, created = QuizProfile.objects.get_or_create(user=request.user)
+    if not transcript_test.exists():
+        # Tao bang diem
+        if request.method == 'POST':
+            for z in que:
+                answers = Answer.objects.filter(question_id=z.id)
+                for answer in answers:
+                    if answer.is_correct is True:
+                        list_answer.append(answer.id)
+                    else:
+                        pass
+                choice_id = request.POST.get('choice-' + str(z.id))
+                # Ép kiểu NoneType
+                if choice_id is None:
+                    choice_id = "0"
+                attempted_list.append(choice_id)
 
-    if request.method == 'POST':
-        for z in que:
-            answers = Answer.objects.filter(question_id=z.id)
-            for answer in answers:
-                if answer.is_correct is True:
-                    list_answer.append(answer.id)
-                else:
-                    pass
-
-            # question_id = request.GET.get('question-' + str(z.id))
-            choise_id = request.POST.get('choise-' + str(z.id))
-            # Ép kiểu NoneType
-            if choise_id is None:
-                choise_id = "0"
-
-            attempted_list.append(choise_id)
-
-        # Ép kiểu String to Int và đưa vào list
-        results = list(map(int, attempted_list))
-        same_values = set(list_answer) & set(results)  # so sanh
-        totail_correct = len(same_values)
-        point = totail_correct/questions_count
-        percent_correct = point*10
-        print(percent_correct)
-        context = {
-            'questions_count': questions_count,
-            'totail_correct': totail_correct,
-            'score': percent_correct,
-            'quiz': quiz
-        }
-        return render(request, 'quiz/quiz-result.html', context)
+            # Ép kiểu String to Int và đưa vào list
+            results = list(map(int, attempted_list))
+            same_values = set(list_answer) & set(results)  # so sanh
+            totail_correct = len(same_values)
+            point = totail_correct/questions_count
+            percent_correct = point*10
+            print(percent_correct)
+            Transcript.objects.create(
+                user=request.user,
+                quiz_item_id=quiz.id,
+                total_score=percent_correct,
+                answer_correct=totail_correct,
+                question_number=questions_count)
+            context = {
+                'questions_count': questions_count,
+                'totail_correct': totail_correct,
+                'score': percent_correct,
+                'quiz': quiz
+            }
+            return render(request, 'quiz/quiz-result.html', context)
+        else:
+            pass
     else:
-        pass
+        trans = Transcript.objects.get(user=request.user, quiz_item=quiz.id)
+        if request.method == 'POST':
+            for z in que:
+                answers = Answer.objects.filter(question_id=z.id)
+                for answer in answers:
+                    if answer.is_correct is True:
+                        list_answer.append(answer.id)
+                    else:
+                        pass
+                choice_id = request.POST.get('choice-' + str(z.id))
+                # Ép kiểu NoneType
+                if choice_id is None:
+                    choice_id = "0"
+                attempted_list.append(choice_id)
+
+            # Ép kiểu String to Int và đưa vào list
+            results = list(map(int, attempted_list))
+            same_values = set(list_answer) & set(results)  # so sanh
+            totail_correct = len(same_values)
+            point = totail_correct/questions_count
+            percent_correct = point*10
+            print(percent_correct)
+            trans.total_score = percent_correct
+            trans.answer_correct = totail_correct
+            trans.question_number = questions_count
+            trans.save()
+            context = {
+                'questions_count': questions_count,
+                'totail_correct': totail_correct,
+                'score': percent_correct,
+                'quiz': quiz
+            }
+            return render(request, 'quiz/quiz-result.html', context)
+        else:
+            pass
     context = {
         'quiz': quiz,
         'questions': questions
@@ -120,6 +159,18 @@ def see_answer(request, slug=None):
         'questions': questions
     }
     return render(request, template_name, context)
+
+@login_required
+def transcript_show(request):
+    template_name = 'quiz/transcript.html'
+    take_trans = Transcript.objects.filter(user=request.user)
+    post = {
+        'obj': take_trans
+    }
+    return render(request, template_name, post)
+
+
+
 
 # def quiz_detail(request, slug=None):
 #     questions = []          #Tạo list chứa các câu hỏi để gởi xuống html

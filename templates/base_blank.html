@@ -10,7 +10,7 @@
 
 	<!--Title for pages-->
 	{% block title %}
-	
+
 	{% endblock title %}
 
 	<!--CSS-->
@@ -66,21 +66,19 @@
 		<div class="container">
 			<!-- row -->
 			<div class="row">
-				<div class="col-md-8">
-					<!-- Hiện messages thông báo -->
-					{% if messages %}
-						{% for message in messages %}
-						<div class='alert alert-{{ message.tags }}'>
-							{{ message }}
-						</div>
-						{% endfor %}
-					{% endif %}
-
-					{% block body %}
-
-					{% endblock body %}
-
+				<!-- Hiện messages thông báo -->
+				{% if messages %}
+				{% for message in messages %}
+				<div class='alert alert-{{ message.tags }}'>
+					{{ message }}
 				</div>
+				{% endfor %}
+				{% endif %}
+
+				{% block body %}
+
+				{% endblock body %}
+
 				<!-- aside -->
 				<div class="col-md-4">
 					{% include 'widget.html' %}

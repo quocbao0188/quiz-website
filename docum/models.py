@@ -40,7 +40,7 @@ class Document(models.Model):
     content = models.TextField(verbose_name = "Description")
     link_url = models.URLField(max_length=255, unique=True, verbose_name = "Direct link")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(null=True)
+    image = models.ImageField(default='hushare-default.png', null=True)
     like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
     date_posted = models.DateTimeField(default=timezone.now, verbose_name = "Date Created")
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))

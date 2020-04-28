@@ -1,6 +1,6 @@
 from django.contrib import admin
 import nested_admin
-from .models import Question, Quiz, QuizProfile, Answer, CategoryQuiz, AttemptedQuestion
+from .models import Question, Quiz, Transcript, Answer, CategoryQuiz
 # Register your models here.
 
 admin.site.site_header = 'HUSHARE Administrator'
@@ -18,16 +18,7 @@ class QuestionInline(nested_admin.NestedTabularInline):
 class QuizAdmin(nested_admin.NestedModelAdmin):
    inlines = [QuestionInline,]
 
-# class ResponseInline(admin.TabularInline):
-#     model = Response
-
-# class QuizTakersAdmin(admin.ModelAdmin):
-#     inlines = [ResponseInline,]
-
 
 admin.site.register(Quiz, QuizAdmin)
-admin.site.register(Answer)
 admin.site.register(CategoryQuiz)
-admin.site.register(Question)
-admin.site.register(QuizProfile)
-admin.site.register(AttemptedQuestion)
+admin.site.register(Transcript)

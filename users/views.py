@@ -22,7 +22,7 @@ from django.conf import settings
 #     }
 #     return render(request, 'users/register.html', content)
 
-# Hàm đăng ký tài khoản
+# Hàm đăng ký tài khoảng
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)

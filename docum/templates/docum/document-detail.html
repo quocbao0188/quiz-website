@@ -44,50 +44,51 @@
 {% endblock page_header %}
 
 {% block body %}
-<!-- post -->
+<div class="col-md-8">
+    <!-- post -->
 
-<figure class="figure-img">
-    <img class="img-responsive" src="{{ doc.image.url }}" alt="">
-    <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
-</figure>
+    <figure class="figure-img">
+        <img class="img-responsive" src="{{ doc.image.url }}" alt="">
+        <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
+    </figure>
 
-<!-- facebook like -->
-<div class="fb-like" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-width="" data-layout="standard"
-    data-action="like" data-size="large" data-share="true"></div>
-<!-- /facebook like -->
+    <!-- facebook like -->
+    <div class="fb-like" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-width="" data-layout="standard"
+        data-action="like" data-size="large" data-share="true"></div>
+    <!-- /facebook like -->
 
-<p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
-        href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
+    <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
+            href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
 
-<p>{{ doc.content|safe|linebreaks }}</p>
+    <p>{{ doc.content|safe|linebreaks }}</p>
 
-<div class="text-center">
+    <div class="text-center">
 
-    {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
 
-    {% if ord.exists and ord != None %}
-    <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank">Download</a>
-    {% else %}
+        {% if ord.exists and ord != None %}
+        <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank"><i class="fas fa-download"></i> Download</a>
+        {% else %}
 
-    {% if doc.credit >= 1 %}
-    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }} Coin</a>
-    {% else %}
-    <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Download for free</a>
-    {% endif %}
+        {% if doc.credit >= 1 %}
+        <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }} Coin</a>
+        {% else %}
+        <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}"><i class="fas fa-download"></i>Download for free</a>
+        {% endif %}
 
-    {% endif %}
+        {% endif %}
 
-    {% else %}
-    <h4>You have to login to download</h4>
-    <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
-    {% endif %}
+        {% else %}
+        <h4>You have to login to download</h4>
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
+        {% endif %}
+    </div>
+
+    <!-- /post -->
+
+    <!-- comment -->
+    <div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
+        data-numposts="5" data-width="100%"></div>
+    <!-- /comment -->
 </div>
-
-<!-- /post -->
-
-<!-- comment -->
-<div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
-    data-numposts="5" data-width="100%"></div>
-<!-- /comment -->
-
 {% endblock body %}

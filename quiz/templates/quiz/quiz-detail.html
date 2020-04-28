@@ -43,7 +43,7 @@
 
 {% block body %}
 <!-- post -->
-<div>
+<div class="col-md-12">
         <h1>Submission time: <span style="color: red; font-weight: bold;" id="time"></span></h1>
     <div>
         <form name="quiz" class="form" id="myquiz" action="" method="POST">
@@ -53,7 +53,7 @@
             <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
             {% for a in q.answer %}
             <div class="form-group">
-                <input class="form-check-input" type="radio" name="choise-{{ q.aidi }}" id="{{ a.pk }}"
+                <input class="form-check-input" type="radio" name="choice-{{ q.aidi }}" id="{{ a.pk }}"
                     value="{{ a.pk }}">
                 <label class="form-check-label" for="{{ a.pk }}">{{ a.text }}</label>
             </div>
