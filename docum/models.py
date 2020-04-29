@@ -82,3 +82,9 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Comment(models.Model):
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    body = models.TextField(verbose_name = "Comment content")
+    date = models.DateTimeField(auto_now_add=True)

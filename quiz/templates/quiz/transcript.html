@@ -57,7 +57,13 @@
                     {% else %}
                     <td><strong style="color: purple;">Excellent</strong></td>
                     {% endif %}
+                    
+                    {% if q.total_score < 4.5 %}
+                    <td style="color: red;"><i class="fas fa-times"></i></td>
+                    {% else %}
                     <td style="color: green;"><i class="fas fa-check"></i></td>
+                    {% endif %}
+                        
                 </tr>
                 {% endfor %}
             </tbody>

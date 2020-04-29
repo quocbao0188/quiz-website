@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import CommentForm
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 # List Document
@@ -64,9 +66,18 @@ def document_detail(request, slug=None):
         order_obj = Order.objects.filter(user=request.user, items=doz.id)
     else:
         order_obj = None
+
+    form = CommentForm()
+    if request.method == 'POST':
+        form = CommentForm(request.POST, user=request.user, document=doz)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(request.path)
+
     post = {
         'doc': doz,
-        'ord': order_obj,#Order.objects.filter(user=request.user, items=doz.id),
+        'ord': order_obj,
+        'form': form,
         'cata': Category.objects.all().annotate(docs_count=Count('documents'))[:5],
         'most': Document.objects.order_by('-date_posted').all()[:5],
     }

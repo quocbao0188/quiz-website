@@ -169,52 +169,6 @@ def transcript_show(request):
     }
     return render(request, template_name, post)
 
-
-
-
-# def quiz_detail(request, slug=None):
-#     questions = []          #Tạo list chứa các câu hỏi để gởi xuống html
-#     template_name = 'quiz/quiz-detail.html'
-#     quiz = get_object_or_404(Quiz, slug=slug)  # Lấy cuộc thi được chọn
-#     que = Question.objects.filter(quiz_id=quiz.id)         # Chọn những câu hỏi trong kì thi
-#     for q in que:
-#         ans = Answer.objects.filter(question_id=q.id)  # Chọn bộ những câu trả lời thuộc câu hỏi
-#         question = {
-#             'label': q.label,
-#             'aidi': q.id,
-#             'answer': ans
-#         }
-#         questions.append(question)
-#     context = {
-#         'quiz': quiz,
-#         'questions': questions
-#     }
-#     return render(request, template_name, context)
-
-# def quiz_detail(request, slug=None):
-#     template_name = 'quiz/quiz-detail.html'
-#     quiz = get_object_or_404(Quiz, slug=slug)
-#     q = quiz.questions.all()
-#     form_list = QuestionForm(instance=q)
-#     context = {
-#         'quiz': quiz,
-#         'form_list': form_list,
-#     }
-#     return render(request, template_name, context)
-
-
-# # List View Index
-# class QuizListView(ListView):
-#     model = Post
-#     # <app>/<model>_<viewtype>.html
-#     template_name = 'pages/quiz.html'
-#     context_object_name = 'doc'
-#     paginate_by = 2
-
-# # class QuizDetailView(DetailView):
-# #     model = Post
-# #     template_name = 'pages/quiz-detail.html'
-
 # class QuizLikeRedirectView(RedirectView):
 #     def get_redirect_url(self, *args, **kwargs):
 #         slug = self.kwargs.get("slug")
@@ -254,38 +208,3 @@ def transcript_show(request):
 #         }
 
 #         return Response(data)
-
-
-# # def quiz(request):
-# #     template_name = 'pages/quiz.html'
-# #     content = {
-# #         'doc':  Post.objects.all()#.order_by('-date_posted')
-# #     }
-# #     return render(request, template_name, content)
-
-# # class CataList(ListView):
-# #     model = Catagories
-# #     template_name = 'pages/widget.html'
-# #     context_object_name = 'catalo'
-
-
-# def quiz_detail(request, slug=None):
-#     template_name = 'pages/quiz-detail.html'
-#     post = {
-#         'quiz_post': get_object_or_404(Post, slug=slug),
-#         'cata': Catagories.objects.all().annotate(posts_count=Count('post'))
-#     }
-#     return render(request, template_name, post)
-
-
-# # def view_404(request, Exception):
-# #     content = {
-# #         'title': 'Page no found'
-# #     }
-# #     return render(request, 'pages/error.html', content)
-
-# # def view_500(request):
-# #     content = {
-# #         'title': 'Page no found'
-# #     }
-# #     return render(request, 'pages/error.html', content)
