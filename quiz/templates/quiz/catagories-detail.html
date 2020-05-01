@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-<title>Search</title>
+<title>Category</title>
 {% endblock title %}
 
 {% block page_header %}
@@ -14,9 +14,9 @@
             <div class="col-md-10">
                 <ul class="page-header-breadcrumb">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Search</li>
+                    <li>Category</li>
                 </ul>
-                <h1>Search</h1>
+                <h1>{{ catago.title }}</h1>
             </div>
         </div>
     </div>
@@ -25,54 +25,32 @@
 {% endblock page_header %}
 
 {% block body %}
-
-
-{% if submitbutton == 'Search' and request.GET.q != '' %}
-
-{% if results %}
-<h1>Results for {{ request.GET.q }}</h1>
-
-{% for result in results %}
-<!-- post -->
-<div class="col-md-12">
-    <div class="post post-row">
-        <a class="post-img" href="{{ result.get_absolute_url }}"><img src="{{ result.image.url }}" alt=""></a>
-        <div class="post-body">
-            <div class="post-meta">
-                <a class="post-category cat-2"
-                    href="{% url 'catago-list' result.catago.slug %}">{{ result.catago.title }}</a>
-                <a class="post-category cat-3">{{ result.get_species_display }}</a>
-                <span class="post-date">{{ result.date_posted|date:"F d, Y" }}</span>
+<div class="col-md-8">
+    {% for quiz in list_quiz %}
+    <!-- post -->
+    <div class="col-md-12">
+        <div class="post post-row">
+            <a class="post-img" href="{% url 'pre-quiz' quiz.slug %}"><img src="{{ quiz.image.url }}" alt=""></a>
+            <div class="post-body">
+                <div class="post-meta">
+                    <a class="post-category cat-3">{{ quiz.category_quiz }}</a>
+                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                </div>
+                <h3 class="post-title"><a href="{% url 'pre-quiz' quiz.slug %}">{{ quiz.title }}</a></h3>
+                <p>{{ quiz.description|truncatewords:20 }}</p>
             </div>
-            <h3 class="post-title"><a href="{{ result.get_absolute_url }}">{{ result.title }}</a></h3>
-            <p>{{ result.content|truncatechars:100 }}</p>
-
-            {% if result.credit >= 1 %}
-            <p><strong>Credit: </strong>{{ result.credit }} Coin</p>
-            {% else %}
-            <p><strong>Free to download</strong></p>
-            {% endif %}
-
         </div>
     </div>
+    <!-- /post -->
+    {% endfor %}
 </div>
-<!-- /post -->
-{% endfor %}
-
-{% else %}
-<h1>No search results for this query</h1>
-{% endif %}
-{% else %}
-<h1>No search results for this query</h1>
-{% endif %}
-
 
 <nav aria-label="Page navigation">
 
-    {% if doc.has_other_pages %}
+    {% if lab.has_other_pages %}
     <ul class="pagination">
 
-        {% if doc.has_previous %}
+        {% if lab.has_previous %}
         <li class="page-item">
             <a class="page-link" href="?page=1" tabindex="-1">First</a>
         </li>
@@ -86,9 +64,9 @@
         </li>
         {% endif %}
 
-        {% for i in doc.paginator.page_range %}
+        {% for i in lab.paginator.page_range %}
 
-        {% if doc.number == i %}
+        {% if lab.number == i %}
         <li class="page-item active">
             <span class="page-link">
                 {{ i }}
@@ -102,7 +80,7 @@
         {% endfor %}
 
 
-        {% if doc.has_next %}
+        {% if lab.has_next %}
         <li class="page-item">
             <a class="page-link" href="?page={{ doc.next_page_number }}">Next</a>
         </li>

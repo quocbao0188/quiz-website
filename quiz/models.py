@@ -19,7 +19,8 @@ class CategoryQuiz(models.Model):
 
 class Quiz(models.Model):
     title = models.CharField(max_length=1000)
-    slug = models.SlugField(unique=True, verbose_name="Clean URL", help_text='A URL slug is the part of a URL or link that comes after the domain extension')
+    slug = models.SlugField(unique=True, verbose_name="Clean URL")
+    publish = models.BooleanField(blank=True, default=False, verbose_name="Publish",help_text="If yes, the quiz is displayed in the quiz list")
     category_quiz = models.ForeignKey(CategoryQuiz, on_delete=models.CASCADE, verbose_name='Category', related_name='quizs')
     description = models.TextField(verbose_name = "Description")
     time = models.PositiveSmallIntegerField(verbose_name='Timer for quiz', help_text='Planning your time for a quiz. Minute units', default=10)
@@ -74,8 +75,8 @@ class Transcript(models.Model):
     question_number = models.PositiveSmallIntegerField(default=0, verbose_name='Total questions')
     transcript_date = models.DateTimeField(default=timezone.now)
 
-def __str__(self):
-        return f'Scores of {self.user.username} subjects'
+    def __str__(self):
+        return f'{self.user.username} {self.quiz_item.title} test score'
 
 @receiver(pre_save, sender=Quiz)
 def slugify_title(sender, instance, *args, **kwargs):

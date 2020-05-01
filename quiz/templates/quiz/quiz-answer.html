@@ -49,20 +49,23 @@
     <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
     {% for a in q.answer %}
     <div class="form-group">
+        
         {% if a.is_correct is True %}
-        <p style="background-color: rgba(11, 173, 11, 0.219); font-size:20px; color: black; "><strong>{{ a.text }}</strong></p>
+        <p style=" background-color: rgba(11, 173, 11, 0.219); font-size:20px; color: black; "><strong>{{ a.text }}</strong></p>
         {% else %}
-        <p style="font-size:20px;">{{ a.text }}</p>
+        <p style="font-size:20px; color: black; ">{{ a.text }}</p>
         {% endif %}
+            
+        {% for ua in user_attempted %}
+        {% if ua == a.pk %}
+        <p style="font-size:20px; color: black; "><strong>You choice: </strong><strong style="color: red;">{{ a.text }}</strong></p>
+        {% endif %}
+        {% endfor %}
             
     </div>
     {% endfor %}
     {% endfor %}
-    <!-- <div class="form-group">
-                <div class="text-center">
-                    <button class="btn btn-success btn-lg" type="submit">Submit</button>
-                </div>
-            </div> -->
 </form>
 <!-- /post -->
 {% endblock body %}
+

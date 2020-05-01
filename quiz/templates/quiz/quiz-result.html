@@ -25,27 +25,33 @@
 {% block body %}
 <div class="col-md-12">
     <div class="text-center">
-        <h1>FINISH THE QUIZ</h1>
+        <h1>FINISHED QUIZ</h1>
     </div>
     <h2>Quiz name: {{ quiz.title }}</h2>
-    <h2>Student name:</h2>
+    <h2>Student name: {{ user.username }}</h2>
     <h2>Progress: <strong style="color: brown;">{{ totail_correct }}/{{ questions_count }}</strong></h2>
-    <h2>Scores: <strong style="color: brown;">{{ score }}</strong></h2>
+    <h2>Scores: <strong style="color: brown;">{{ score|floatformat }}</strong></h2>
 
     {% if score < 4.0 %}
-    <h2>Rank: <strong style="color: brown;">Weak</strong></h2>
-    {% elif score == 4.0 or score <= 5.4 %}
-    <h2>Rank: <strong style="color: brown;">Below Average</strong></h2>
-    {% elif score == 5.5 or score <= 6.9 %}
-    <h2>Rank: <strong style="color: brown;">Average</strong></h2>
-    {% elif score == 7.0 or score <= 8.4 %}
-    <h2>Rank: <strong style="color: brown;">Good</strong></h2>
+    <h2>Rank: <strong style="color: brown;">Poor</strong></h2>
+    {% elif score == 4.0 or score <= 4.9 %}
+    <h2>Rank: <strong style="color: gray;">Weak</strong></h2>
+    {% elif score == 5.0 or score <= 5.9 %}
+    <h2>Rank: <strong style="color: darkgoldenrod;">Ordinary</strong></h2>
+    {% elif score == 6.0 or score <= 6.9 %}
+    <h2>Rank: <strong style="color: green;">Average Good</strong></h2>
+    {% elif score == 7.0 or score <= 7.9 %}
+    <h2>Rank: <strong style="color: purple;">Good</strong></h2>
+    {% elif score == 8.0 or score <= 8.9 %}
+    <h2>Rank: <strong style="color: purple;">Very Good</strong></h2>
     {% else %}
-    <h2>Rank: <strong style="color: brown;">Excellent</strong></h2>
+    <h2>Rank: <strong style="color: purple;">Excellent</strong></h2>
     {% endif %}
+
     <div class="form-group">
         <div class="text-center">
-            <a class="btn btn-success btn-lg" href="{% url 'see-answer' quiz.slug %}"><i class="fas fa-plus"></i> See the answers</a>
+            <a class="btn btn-success btn-lg" href="{% url 'see-answer' quiz.slug %}"><i class="fas fa-plus"></i> See
+                the answers</a>
         </div>
     </div>
 </div>

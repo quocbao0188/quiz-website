@@ -16,9 +16,29 @@ class QuestionInline(nested_admin.NestedTabularInline):
     extra = 1
 
 class QuizAdmin(nested_admin.NestedModelAdmin):
-   inlines = [QuestionInline,]
+    inlines = [QuestionInline,]
+    fields = ['title', 'publish', 'category_quiz', 'description', 'time', 'image']
+    list_display = ['title', 'category_quiz', 'time', 'created', 'publish']
+    search_fields = ['title']
+    date_hierarchy = 'created'
+    actions = ['make_published', 'make_draft']
 
+    def make_published(self, request, queryset):
+        queryset.update(publish=True)
+    make_published.short_description = "Mark selected quizzes as published"
+
+    def make_draft(self, request, queryset):
+        queryset.update(publish=False)
+    make_draft.short_description = "Mark selected quizzes as draft"
+
+class TranscriptAdmin(admin.ModelAdmin):
+    list_display = ['user', 'quiz_item', 'total_score', 'transcript_date']
+    search_fields = ['user__username']
+    date_hierarchy = 'transcript_date'
+
+class CategoryQuizAdmin(admin.ModelAdmin):
+    fields = ['title']
 
 admin.site.register(Quiz, QuizAdmin)
-admin.site.register(CategoryQuiz)
-admin.site.register(Transcript)
+admin.site.register(CategoryQuiz, CategoryQuizAdmin)
+admin.site.register(Transcript, TranscriptAdmin)

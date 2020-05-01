@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import CommentForm
 from django.http import HttpResponseRedirect
-# Create your views here.
+# import csv
 
 # List Document
 def document_list(request):
@@ -33,7 +33,7 @@ def document_list(request):
         
     post = {
         'doc': docs,
-        'cata': Category.objects.all().annotate(docs_count=Count('documents'))[:5],
+        'cata': Category.objects.all(),
         'most': Document.objects.order_by('-date_posted').all()[:5],
     }
     return render(request, template_name, post)
@@ -53,7 +53,7 @@ def lab_list(request):
 
     post = {
         'lab': labs,
-        'cata': Category.objects.all().annotate(docs_count=Count('documents'))[:5],
+        'cata': Category.objects.all(),
         'most': Document.objects.order_by('-date_posted').all()[:5],
     }
     return render(request, template_name, post)
@@ -78,7 +78,7 @@ def document_detail(request, slug=None):
         'doc': doz,
         'ord': order_obj,
         'form': form,
-        'cata': Category.objects.all().annotate(docs_count=Count('documents'))[:5],
+        'cata': Category.objects.all(),
         'most': Document.objects.order_by('-date_posted').all()[:5],
     }
     return render(request, template_name, post)
@@ -118,7 +118,7 @@ def catago_list(request, slug=None):
     content = {
         'catago': catago,
         'list_doc': list_doc,
-        'cata': Category.objects.all().annotate(docs_count=Count('documents'))[:5],
+        'cata': Category.objects.all(),
         'most': Document.objects.order_by('-date_posted').all()[:5],
     }
     return render(request, template_name, content)
@@ -134,3 +134,14 @@ def buy_detail(request):
     except ObjectDoesNotExist:
         messages.warning(request, f'Ban chua mua tai lieu nao')
         return redirect("/")
+
+# def export_csv(request):
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="document.csv"'
+#     writer = csv.writer(response)
+#     writer.writerow(['Title', 'Slug'])
+
+#     for docs in Document.objects.all().values_list('title', 'slug', 'species', 'catago', 'content', 'link_url', 'author', 'image', 'date_posted', 'credit'):
+#         writer.writerow(docs)
+
+#     return response
