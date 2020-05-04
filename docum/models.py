@@ -5,7 +5,9 @@ from decimal import Decimal
 from PIL import Image
 from django.urls import reverse
 from django.utils.text import slugify
-# Create your models here.
+from django.dispatch import receiver
+from django.db.models.signals import post_save, pre_save
+
 class Category(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, verbose_name = "Clean URL")
@@ -51,10 +53,6 @@ class Document(models.Model):
 
     def get_absolute_url(self):
         return reverse('doc-detail', kwargs={'slug': self.slug})
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title) # set the slug explicitly
-        super(Document, self).save(*args, **kwargs) # call Django's save()
     
     # def get_absolute_url(self):
     #     return reverse("quiz-detail", kwargs={"slug": self.slug})
@@ -88,3 +86,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField(verbose_name = "Comment content")
     date = models.DateTimeField(auto_now_add=True)
+
+@receiver(pre_save, sender=Document)
+def slugify_title(sender, instance, *args, **kwargs):
+    instance.slug = slugify(instance.title)

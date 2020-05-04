@@ -39,7 +39,7 @@
                 <h3 class="post-title"><a href="{% url 'pre-quiz' quizs.slug %}">{{ quizs.title }}</a></h3>
                 <p><strong>Number of questions: </strong>{{ quizs.question_count }} | <strong>Time:
                     </strong>{{ quizs.time }} minute</p>
-                <p>{{ quizs.description|truncatewords:20 }}</p>
+                <p>{{ quizs.description|truncatewords:20|safe }}</p>
             </div>
         </div>
     </div>

@@ -1,7 +1,8 @@
 from django.contrib import admin
 import nested_admin
 from .models import Question, Quiz, Transcript, Answer, CategoryQuiz
-# Register your models here.
+from tinymce.widgets import TinyMCE
+from django.db import models
 
 admin.site.site_header = 'HUSHARE Administrator'
 
@@ -17,11 +18,20 @@ class QuestionInline(nested_admin.NestedTabularInline):
 
 class QuizAdmin(nested_admin.NestedModelAdmin):
     inlines = [QuestionInline,]
-    fields = ['title', 'publish', 'category_quiz', 'description', 'time', 'image']
     list_display = ['title', 'category_quiz', 'time', 'created', 'publish']
     search_fields = ['title']
     date_hierarchy = 'created'
     actions = ['make_published', 'make_draft']
+
+    fieldsets = [
+        ("Title/Category", {'fields': ["title", "category_quiz", "publish"]}),
+        ("Content/Image", {'fields': ["description", "image"]}),
+        ("Test time", {'fields': ["time"]}),
+    ]
+
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE()},
+        }
 
     def make_published(self, request, queryset):
         queryset.update(publish=True)

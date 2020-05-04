@@ -93,7 +93,7 @@ def buy_item(request, slug=None):
     print(order_qs)
 
     if Order.objects.filter(user=request.user, items=doz.id).exists():
-        messages.warning(request, f'Ban da mua')
+        messages.warning(request, f'You have successfully purchased')
     else:
         if user_now.credit >= doz.credit:
             if order_qs.exists():
@@ -105,9 +105,9 @@ def buy_item(request, slug=None):
             user_now.credit = user_now.credit - doz.credit
             print(user_now.credit)
             user_now.save()
-            messages.success(request, f'Ban da mua thanh cong')
+            messages.success(request, f'You have successfully purchased')
         else:
-            messages.warning(request, f'Ban khong du tien de mua tai lieu')
+            messages.warning(request, f'You do not have enough money to buy documents')
 
     return redirect('doc-detail', slug=slug)
 
@@ -132,7 +132,7 @@ def buy_detail(request):
         }
         return render(request, template_name, post)
     except ObjectDoesNotExist:
-        messages.warning(request, f'Ban chua mua tai lieu nao')
+        messages.warning(request, f'You have not purchased any documents')
         return redirect("/")
 
 # def export_csv(request):
