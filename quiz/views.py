@@ -16,7 +16,7 @@ def quiz_list(request):
     context = {
         'quiz': quiz,
         'catania': CategoryQuiz.objects.all(),
-        'mosque': Quiz.objects.order_by('-created').filter(publish=True)[:5],
+        'mosque': Quiz.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, context)
 
@@ -29,7 +29,7 @@ def pre_quiz(request, slug=None):
         'quiz': quiz,
         'question_count': question_count,
         'catania': CategoryQuiz.objects.all(),
-        'mosque': Quiz.objects.order_by('-created').filter(publish=True)[:5],
+        'mosque': Quiz.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, context)
 
@@ -40,6 +40,7 @@ def quiz_detail(request, slug=None):
     attempted_list = []
     # Create lists containing questions to send to html
     questions = []
+    not_done = []
     global user_attempted
     template_name = 'quiz/quiz-detail.html'
     # Get the selected quiz
@@ -71,6 +72,7 @@ def quiz_detail(request, slug=None):
                 # Type conversion NoneType
                 if choice_id is None:
                     choice_id = "0"
+                    not_done.append(choice_id)
                 attempted_list.append(choice_id)
 
             # Type conversion from string to Int and put it into list
@@ -78,19 +80,25 @@ def quiz_detail(request, slug=None):
             user_attempted = results
             # Compare
             same_values = set(list_answer) & set(results)
-            totail_correct = len(same_values)
-            point = totail_correct/questions_count
+            total_correct = len(same_values)
+            point = total_correct/questions_count
+            total_not_done = len(not_done)
+            print(not_done)
+            print(total_not_done)
             percent_correct = point*10
             print(percent_correct)
+            wrong_answer = (questions_count-total_not_done)-total_correct
             Transcript.objects.create(
                 user=request.user,
                 quiz_item_id=quiz.id,
                 total_score=percent_correct,
-                answer_correct=totail_correct,
+                answer_correct=total_correct,
                 question_number=questions_count)
             context = {
                 'questions_count': questions_count,
-                'totail_correct': totail_correct,
+                'total_correct': total_correct,
+                'wrong_answer': wrong_answer,
+                'total_not_done': total_not_done,
                 'score': percent_correct,
                 'quiz': quiz
             }
@@ -111,23 +119,30 @@ def quiz_detail(request, slug=None):
 
                 if choice_id is None:
                     choice_id = "0"
+                    not_done.append(choice_id)
                 attempted_list.append(choice_id)
 
             results = list(map(int, attempted_list))
             user_attempted = results
             same_values = set(list_answer) & set(results)
-            totail_correct = len(same_values)
-            point = totail_correct/questions_count
+            total_correct = len(same_values)
+            point = total_correct/questions_count
+            total_not_done = len(not_done)
+            print(not_done)
+            print(total_not_done)
             percent_correct = point*10
             print(percent_correct)
             print(list_answer)
+            wrong_answer = (questions_count-total_not_done)-total_correct
             trans.total_score = percent_correct
-            trans.answer_correct = totail_correct
+            trans.answer_correct = total_correct
             trans.question_number = questions_count
             trans.save()
             context = {
                 'questions_count': questions_count,
-                'totail_correct': totail_correct,
+                'total_correct': total_correct,
+                'wrong_answer': wrong_answer,
+                'total_not_done': total_not_done,
                 'score': percent_correct,
                 'quiz': quiz,
             }
@@ -182,7 +197,7 @@ def catago_quiz(request, slug=None):
         'catago': catago,
         'list_quiz': list_quiz,
         'catania': CategoryQuiz.objects.all(),
-        'mosque': Quiz.objects.order_by('-created').filter(publish=True)[:5],
+        'mosque': Quiz.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, content)
 

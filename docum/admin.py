@@ -9,16 +9,16 @@ class CommentInLine(admin.TabularInline):
     extra = 1
 class DocAdmin(admin.ModelAdmin):
     model = Document
-    list_display = ['title', 'date_posted', 'credit']
+    list_display = ['title', 'create_at', 'updated_at', 'credit']
     search_fields = ['title']
-    date_hierarchy = 'date_posted'
+    date_hierarchy = 'create_at'
     inlines = [CommentInLine]
 
     fieldsets = [
         ("Title/Category", {'fields': ["title", "species", "catago"]}),
         ("Content/Image", {'fields': ["content", "image"]}),
         ("URL download", {'fields': ["link_url"]}),
-        ("More setting", {'fields': ["author", "like", "date_posted", "credit"]})
+        ("More setting", {'fields': ["author", "like", "credit"]})
     ]
 
     formfield_overrides = {

@@ -15,12 +15,16 @@ class QuestionInline(nested_admin.NestedTabularInline):
     model = Question
     inlines = [AnswerInline,]
     extra = 1
+    
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE()},
+        }
 
 class QuizAdmin(nested_admin.NestedModelAdmin):
     inlines = [QuestionInline,]
-    list_display = ['title', 'category_quiz', 'time', 'created', 'publish']
+    list_display = ['title', 'category_quiz', 'time', 'create_at', 'updated_at', 'publish']
     search_fields = ['title']
-    date_hierarchy = 'created'
+    date_hierarchy = 'create_at'
     actions = ['make_published', 'make_draft']
 
     fieldsets = [
@@ -42,9 +46,9 @@ class QuizAdmin(nested_admin.NestedModelAdmin):
     make_draft.short_description = "Mark selected quizzes as draft"
 
 class TranscriptAdmin(admin.ModelAdmin):
-    list_display = ['user', 'quiz_item', 'total_score', 'transcript_date']
+    list_display = ['user', 'quiz_item', 'total_score', 'create_at', 'updated_at']
     search_fields = ['user__username']
-    date_hierarchy = 'transcript_date'
+    date_hierarchy = 'create_at'
 
 class CategoryQuizAdmin(admin.ModelAdmin):
     fields = ['title']

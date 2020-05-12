@@ -33,8 +33,8 @@
             <a class="post-img" href="{% url 'pre-quiz' quizs.slug %}"><img src="{{ quizs.image.url }}" alt=""></a>
             <div class="post-body">
                 <div class="post-meta">
-                    <a class="post-category cat-3" href="#">{{ quizs.category_quiz }}</a>
-                    <span class="post-date">{{ quizs.created|date:"F d, Y" }}</span>
+                    <a class="post-category cat-3" href="{% url 'catago-quiz' quizs.category_quiz.slug %}">{{ quizs.category_quiz }}</a>
+                    <span class="post-date">{{ quizs.create_at|date:"F d, Y" }}</span>
                 </div>
                 <h3 class="post-title"><a href="{% url 'pre-quiz' quizs.slug %}">{{ quizs.title }}</a></h3>
                 <p><strong>Number of questions: </strong>{{ quizs.question_count }} | <strong>Time:

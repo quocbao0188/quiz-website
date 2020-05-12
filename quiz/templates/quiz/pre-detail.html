@@ -30,8 +30,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="post-meta">
-                    <a class="post-category cat-2" href="#">{{ quiz.category_quiz }}</a>
-                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                    <a class="post-category cat-3" href="{% url 'catago-quiz' quiz.category_quiz.slug %}">{{ quiz.category_quiz }}</a>
                 </div>
                 <h1>{{ quiz.title }}</h1>
             </div>
@@ -46,7 +45,7 @@
     <!-- post -->
     <figure class="figure-img">
         <img class="img-responsive" src="{{ quiz.image.url }}" alt="">
-        <figcaption>{{ quiz.created|date:"F d, Y" }}</figcaption>
+        <figcaption>{{ quiz.create_at }}</figcaption>
     </figure>
     <h2>Number of questions: <strong style="color: brown;">{{ question_count }}</strong></h2>
     <h2>Time: <strong style="color: brown;">{{ quiz.time }} minutes</strong></h2>
@@ -59,7 +58,7 @@
     <p>{{ quiz.description|safe|linebreaks }}</p>
     <div class="form-group">
         <div class="text-center">
-            <a class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}">Start</a>
+            <a class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}" onclick="start(event)"><i class="fas fa-play"></i> Start Now</a>
         </div>
     </div>
 

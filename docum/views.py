@@ -34,7 +34,7 @@ def document_list(request):
     post = {
         'doc': docs,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-date_posted').all()[:5],
+        'most': Document.objects.order_by('-create_at').all()[:5],
     }
     return render(request, template_name, post)
 
@@ -54,7 +54,7 @@ def lab_list(request):
     post = {
         'lab': labs,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-date_posted').all()[:5],
+        'most': Document.objects.order_by('-create_at').all()[:5],
     }
     return render(request, template_name, post)
 
@@ -79,35 +79,45 @@ def document_detail(request, slug=None):
         'ord': order_obj,
         'form': form,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-date_posted').all()[:5],
+        'most': Document.objects.order_by('-create_at').all()[:5],
     }
     return render(request, template_name, post)
 
 @login_required
 def buy_item(request, slug=None):
     item = get_object_or_404(Document, slug=slug)
-    order_qs = Order.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(user=request.user, items_id=item.id)
     user_now = Profile.objects.get(user=request.user)
-    doz = Document.objects.get(slug=slug)
-    print(user_now.credit)
-    print(order_qs)
 
-    if Order.objects.filter(user=request.user, items=doz.id).exists():
-        messages.warning(request, f'You have successfully purchased')
-    else:
-        if user_now.credit >= doz.credit:
-            if order_qs.exists():
-                order = order_qs[0]
-                order.items.add(item)
-            else:
-                order = Order.objects.create(user=request.user)
-                order.items.add(item)
-            user_now.credit = user_now.credit - doz.credit
+    if not order_qs.exists():
+        if user_now.credit >= item.credit:
+            Order.objects.create(user=request.user, items_id=item.id)
+            user_now.credit = user_now.credit - item.credit
             print(user_now.credit)
             user_now.save()
             messages.success(request, f'You have successfully purchased')
         else:
             messages.warning(request, f'You do not have enough money to buy documents')
+    else:
+        messages.warning(request, f'You have purchased before')
+
+
+    # if order_qs.exists():
+    #     messages.warning(request, f'You have successfully purchased')
+    # else:
+    #     if user_now.credit >= doz.credit:
+    #         if order_qs.exists():
+    #             order = order_qs[0]
+    #             order.items.add(item)
+    #         else:
+    #             order = Order.objects.create(user=request.user)
+    #             order.items.add(item)
+    #         user_now.credit = user_now.credit - doz.credit
+    #         print(user_now.credit)
+    #         user_now.save()
+    #         messages.success(request, f'You have successfully purchased')
+    #     else:
+    #         messages.warning(request, f'You do not have enough money to buy documents')
 
     return redirect('doc-detail', slug=slug)
 
@@ -119,21 +129,18 @@ def catago_list(request, slug=None):
         'catago': catago,
         'list_doc': list_doc,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-date_posted').all()[:5],
+        'most': Document.objects.order_by('-create_at').all()[:5],
     }
     return render(request, template_name, content)
 
 @login_required
 def buy_detail(request):
-    try:
-        template_name = 'docum/buy-detail.html'
-        post = {
-            'obj': Order.objects.get(user=request.user)
-        }
-        return render(request, template_name, post)
-    except ObjectDoesNotExist:
-        messages.warning(request, f'You have not purchased any documents')
-        return redirect("/")
+    template_name = 'docum/buy-detail.html'
+    post = {
+        'obj': Order.objects.filter(user=request.user)
+    }
+    return render(request, template_name, post)
+
 
 # def export_csv(request):
 #     response = HttpResponse(content_type='text/csv')

@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^_nested_admin/', include('nested_admin.urls')),
     path('tinymce/', include('tinymce.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     path('', include('home.urls')),
     path('', include('quiz.urls')),
     path('', include('gpa.urls')),

@@ -43,29 +43,50 @@
 
 {% block body %}
 <!-- post -->
-<form name="quiz" class="form" id="myquiz" action="" method="">
+<div class="col-md-12" id="printArea">
     {% for q in questions %}
-    <legend style="color: brown;"><strong>{{ forloop.counter }}: {{ q.label }}</strong></legend>
+    <div style="border-style: solid; border-color: gray;">
+        <h1 style="color: brown;">Question {{ forloop.counter }}:</h1>
+        <p>{{ q.label|safe }}</p>
+    </div>
     <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
     {% for a in q.answer %}
     <div class="form-group">
-        
+
         {% if a.is_correct is True %}
-        <p style=" background-color: rgba(11, 173, 11, 0.219); font-size:20px; color: black; "><strong>{{ a.text }}</strong></p>
+        <p style=" background-color: rgba(11, 173, 11, 0.219); font-size: 20px; color: black; ">
+            <strong>{{ a.text }}</strong></p>
         {% else %}
         <p style="font-size:20px; color: black; ">{{ a.text }}</p>
         {% endif %}
-            
+
         {% for ua in user_attempted %}
         {% if ua == a.pk %}
-        <p style="font-size:20px; color: black; "><strong>You choice: </strong><strong style="color: red;">{{ a.text }}</strong></p>
+        <p style="font-size: 20px; color: black; "><strong>You choice: </strong><strong
+                style="color: red;">{{ a.text }}</strong></p>
         {% endif %}
         {% endfor %}
-            
+
     </div>
     {% endfor %}
     {% endfor %}
-</form>
-<!-- /post -->
-{% endblock body %}
 
+</div>
+
+<div class="text-center">
+    <button class="btn btn-success btn-lg" onclick="printDiv('printArea')"><i class="fas fa-print"></i> Print
+        results</button>
+</div>
+<!-- /post -->
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+</script>
+{% endblock body %}

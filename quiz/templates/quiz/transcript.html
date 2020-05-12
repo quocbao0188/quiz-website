@@ -33,7 +33,9 @@
                     <th scope="col">Quiz</th>
                     <th scope="col">Score</th>
                     <th scope="col">Progress</th>
-                    <th scope="col">Date</th>
+                    <!-- <th scope="col">Unanswered</th> -->
+                    <th scope="col">Create Date</th>
+                    <th scope="col">Updated Date</th>
                     <th scope="col">Rank</th>
                     <th scope="col">Passed/Failed</th>
                 </tr>
@@ -42,11 +44,12 @@
                 {% for q in obj %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ q.quiz_item.title }}</td>
+                    <td><strong>{{ q.quiz_item.title }}</strong></td>
                     <td style="color: red;"><strong>{{ q.total_score|floatformat }}</strong></td>
+                    <!-- <td></td> -->
                     <td>{{ q.answer_correct}}/{{ q.question_number }}</td>
-                    <td>{{ q.transcript_date }}</td>
-
+                    <td>{{ q.create_at }}</td>
+                    <td>{{ q.updated_at }}</td>
                     {% if q.total_score < 4.0 %}
                     <td><strong style="color: brown;">Poor</strong></td>
                     {% elif q.total_score == 4.0 or q.total_score <= 4.9 %}

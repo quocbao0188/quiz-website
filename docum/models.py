@@ -44,8 +44,9 @@ class Document(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(default='hushare-default.png', null=True)
     like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
-    date_posted = models.DateTimeField(default=timezone.now, verbose_name = "Date Created")
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     
 
     def __str__(self):
@@ -75,8 +76,8 @@ class Document(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(Document, blank=True, verbose_name = "Items")
-    order_date = models.DateTimeField(auto_now_add=True)
+    items = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name = "Items")
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
         return self.user.username
@@ -85,7 +86,7 @@ class Comment(models.Model):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField(verbose_name = "Comment content")
-    date = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
 
 @receiver(pre_save, sender=Document)
 def slugify_title(sender, instance, *args, **kwargs):

@@ -37,12 +37,12 @@
                         href="{% url 'catago-list' items.catago.slug %}">{{ items.catago.title }}</a>
 
                     {% if items.credit >= 1 %}
-                    <a class="post-category cat-5">COST</a>
+                    <a class="post-category cat-5">PAID</a>
                     {% else %}
                     <a class="post-category cat-1">FREE</a>
                     {% endif %}
 
-                    <span class="post-date">{{ items.date_posted|date:"F d, Y" }}</span>
+                    <span class="post-date">{{ items.updated_at|date:"F d, Y" }}</span>
                 </div>
                 <h3 class="post-title"><a href="{{ items.get_absolute_url }}">{{ items.title }}</a></h3>
                 <p>{{ items.content|truncatewords:20|safe }}</p>

@@ -50,7 +50,7 @@
 
     <figure class="figure-img">
         <img class="img-responsive" src="{{ doc.image.url }}" alt="">
-        <figcaption>{{ doc.date_posted|date:"F d, Y" }}</figcaption>
+        <figcaption>{{ doc.updated_at }}</figcaption>
     </figure>
 
     <!-- facebook like -->
@@ -83,14 +83,17 @@
 
         {% else %}
         <h4>You have to login to download</h4>
-        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login Now</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login Now</a>
         {% endif %}
     </div>
 
     <!-- /post -->
 
+
+    {% if user.is_authenticated %}
     <!-- comments -->
-    <div class="section-row">
+    <div class="row">
+        <hr>
         <div class="section-title">
             <h2>{{doc.comments.count}} Comments</h2>
         </div>
@@ -119,10 +122,22 @@
         </form>
     </div>
     <!-- /comments -->
+    {% else %}
+    <div class="row">
+        <hr>
+        <div class="alert alert-info" role="alert">
+            You must be <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login</a> to comment
+        </div>
+    </div>
+    {% endif %}
 
     <!-- comment -->
-    <div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
-        data-numposts="5" data-width="100%"></div>
+    <div class="row">
+        <hr>
+        <div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
+        data-numposts="5" data-width="100%">
+        </div>
+    </div>
     <!-- /comment -->
 </div>
 {% endblock body %}

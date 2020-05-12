@@ -4,32 +4,6 @@
 <script src="{% static 'js/main.js' %}"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v6.0&appId=1639747626177682&autoLogAppEvents=1"></script>
-<script src="https://kit.fontawesome.com/3f99f99106.js" crossorigin="anonymous"></script>
-
-<script>
-    function clicked(e) {
-        if(!confirm('Are you really want to submit quiz ?'))e.preventDefault();
-    }
-</script>
-
-<script>
-    //Get the button
-    var mybutton = document.getElementById("myBtn");
-    
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function() {scrollFunction()};
-    
-    function scrollFunction() {
-      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-      } else {
-        mybutton.style.display = "none";
-      }
-    }
-    
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    }
-</script>
+<!-- <script src="https://kit.fontawesome.com/3f99f99106.js" crossorigin="anonymous"></script> -->
+<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/all.min.js' %}"></script>

@@ -25,7 +25,8 @@ class Quiz(models.Model):
     description = models.TextField(verbose_name = "Description")
     time = models.PositiveSmallIntegerField(verbose_name='Timer for quiz', help_text='Planning your time for a quiz. Minute units', default=10)
     image = models.ImageField(default='hushare-default.png', null=True)
-    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     class Meta:
         verbose_name = 'Quiz'
@@ -47,7 +48,7 @@ class Quiz(models.Model):
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
-    label = models.CharField(max_length=1000)
+    label = models.TextField()
 
     def __str__(self):
         return self.label
@@ -73,7 +74,8 @@ class Transcript(models.Model):
     total_score = models.FloatField(default=0, verbose_name = "Total score")
     answer_correct = models.PositiveSmallIntegerField(default=0, verbose_name='Total number of correct answers')
     question_number = models.PositiveSmallIntegerField(default=0, verbose_name='Total questions')
-    transcript_date = models.DateTimeField(default=timezone.now)
+    create_at = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self):
         return f'{self.user.username} {self.quiz_item.title} test score'

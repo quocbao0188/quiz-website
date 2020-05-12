@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
+{% providers_media_js %}
 
 {% block title %}
 <title>Login</title>
@@ -19,19 +21,30 @@
             </fieldset>
             <div class="form-group">
                 <div class="text-center">
-                    <button class="btn btn-success" type="submit">Login</button>
+                    <button class="btn btn-success btn-lg" type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
                 </div>
             </div>
         </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Need a account <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
-            </small>
+
+        <div class="form-group">
+            <legend class="border_bottom mb_4">Log In by Social Account</legend>
+            <a class="btn btn-primary btn-lg" style="background-color: #3b5998;" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook"></i> Facebook Connect</a>
+            <a class="btn btn-primary btn-lg" style="background-color: #db4a39;" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i> Google Connect</a>
+
         </div>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Forgot your password ? <a class="ml-2" href="{% url 'password_reset' %}">Change Password</a>
-            </small>
+
+        <div class="form-group">
+            <legend class="border_bottom mb_4">Need Help ?</legend>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Need a account <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+                </small>
+            </div>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Forgot your password ? <a class="ml-2" href="{% url 'password_reset' %}">Change Password</a>
+                </small>
+            </div>
         </div>
     </div>
 </div>
