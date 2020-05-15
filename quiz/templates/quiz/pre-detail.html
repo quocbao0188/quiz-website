@@ -58,12 +58,9 @@
     <p>{{ quiz.description|safe|linebreaks }}</p>
     <div class="form-group">
         <div class="text-center">
-            <a class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}" onclick="start(event)"><i class="fas fa-play"></i> Start Now</a>
+            <a id="startButton" class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}"><i class="fas fa-play"></i> Start Now</a>
         </div>
     </div>
-
-
-
     <!-- /post -->
 
     <!-- comment -->
@@ -72,3 +69,18 @@
     <!-- /comment -->
 </div>
 {% endblock body %}
+
+{% block jquery %}
+<script>
+    $(document).ready(function(){
+        $("#submitQuiz").click(function(){
+            if(confirm('Do you want to start quiz now ?')){
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock jquery %}

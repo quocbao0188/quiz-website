@@ -1,21 +1,52 @@
 from django.shortcuts import render
 from docum.models import Document
+from quiz.models import Quiz
 from django.db.models import Q
 
-def search_docs(request):
+def search(request):
     template_name = 'search/search.html'
+    return render(request, template_name)
+
+def search_docs(request):
     if request.method == 'GET':
         query = request.GET.get('q')
+        type_search = request.GET.get('typeSearch')
         submitbutton = request.GET.get('submit')
-        if query is not None:
-            lookups = Q(title__icontains=query)|Q(species__icontains=query)
-            results = Document.objects.filter(lookups).distinct()
-            content = {
-                'results': results,
-                'submitbutton': submitbutton
-            }
-            return render(request, template_name, content)
+        if type_search == '1':
+            if query is not None:
+                lookups = Q(title__icontains=query)&Q(species__icontains='DOC')
+                results = Document.objects.filter(lookups).distinct()
+                content = {
+                    'results': results,
+                    'submitbutton': submitbutton,
+                    'header': 'Documents Search'
+                }
+                return render(request, 'search/search-docs.html', content)
+            else:
+                return render(request, 'search/search-docs.html')
+        elif type_search == '2':
+            if query is not None:
+                lookups = Q(title__icontains=query)&Q(species__icontains='LAB')
+                results = Document.objects.filter(lookups).distinct()
+                content = {
+                    'results': results,
+                    'submitbutton': submitbutton,
+                    'header': 'Practice Labs Search'
+                }
+                return render(request, 'search/search-docs.html', content)
+            else:
+                return render(request, 'search/search-docs.html')
         else:
-            return render(request, template_name)
+            if query is not None:
+                lookups = Q(title__icontains=query)
+                results = Quiz.objects.filter(lookups).distinct()
+                content = {
+                    'results': results,
+                    'submitbutton': submitbutton,
+                    'header': 'Quizzes Search'
+                }
+                return render(request, 'search/search-quizzes.html', content)
+            else:
+                return render(request, 'search/search-quizzes.html')
     else:
-        return render(request, template_name)
+        return render(request, 'search/search-quizzes.html')

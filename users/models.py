@@ -4,8 +4,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from decimal import Decimal
 from PIL import Image
 
-# Create your models here.
-# Hàm tạo profile cho tài khoản
 class Profile(models.Model):
 
     MALE = 'M'
@@ -37,9 +35,7 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 200px
     def save(self, **kwargs):
-        # Ghi đè phương thức save()
         super().save()
         img = Image.open(self.image.path)
         if img.height > 200 or img.width > 200:

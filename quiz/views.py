@@ -189,6 +189,11 @@ def transcript_show(request):
     }
     return render(request, template_name, post)
 
+def del_transcript(request, id=None):
+    trans = get_object_or_404(Transcript, id=id)
+    trans.delete()
+    return redirect('transcript')
+
 def catago_quiz(request, slug=None):
     template_name = 'quiz/catagories-detail.html'
     catago = get_object_or_404(CategoryQuiz, slug=slug)

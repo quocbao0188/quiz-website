@@ -101,13 +101,10 @@
         <div class="post-comments">
             <!-- comment -->
             <div class="media">
-                <div class="media-left">
-                    <img class="media-object" src="{{ user.profile.image.url }}" alt="">
-                </div>
                 <div class="media-body">
                     <div class="media-heading">
                         <h4>{{ comment.user }}</h4>
-                        <span class="time">{{ comment.date }}</span>
+                        <span class="time">{{ comment.create_at }}</span>
                     </div>
                     <p>{{ comment.body|linebreaks|safe }}</p>
                 </div>
@@ -118,10 +115,11 @@
         <form action="{% url 'doc-detail' doc.slug %}" method="POST">
             {% csrf_token %}
             {{ form|crispy }}
-            <input class="btn btn-success" type="submit" value="Comment">
+            <input class="btn btn-primary btn-lg" type="submit" value="Comment">
         </form>
     </div>
     <!-- /comments -->
+    
     {% else %}
     <div class="row">
         <hr>
@@ -130,7 +128,7 @@
         </div>
     </div>
     {% endif %}
-
+    
     <!-- comment -->
     <div class="row">
         <hr>
@@ -141,3 +139,5 @@
     <!-- /comment -->
 </div>
 {% endblock body %}
+
+    

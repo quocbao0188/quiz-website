@@ -29,7 +29,6 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     path('', include('home.urls')),
     path('', include('quiz.urls')),
-    path('', include('gpa.urls')),
     path('', include('docum.urls')),
     url(r'^search/', include(('search.urls', 'search'), namespace='search')),
     path('register/', user_views.register, name='register'),

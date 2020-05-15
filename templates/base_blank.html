@@ -28,7 +28,7 @@
 				<div class="container">
 					<!-- logo -->
 					<div class="nav-logo">
-						<a href="/" class="logo"><img src="{% static 'img/logo.png' %}" alt=""></a>
+						<a href="{% url 'home' %}" class="logo"><img src="{% static 'img/logo.png' %}" alt=""></a>
 					</div>
 					<!-- /logo -->
 
@@ -40,8 +40,7 @@
 					<!-- search & aside toggle -->
 					<div class="nav-btns">
 						<button class="aside-btn"><i class="fa fa-bars"></i></button>
-						<button class="search-btn"><i class="fa fa-search"></i></button>
-						{% include 'search-bar.html' %}
+						<a class="search-btn" href="{% url 'search:input-search' %}"><i class="fa fa-search"></i></a>
 					</div>
 					<!-- /search & aside toggle -->
 				</div>
@@ -53,7 +52,6 @@
 			<!-- Aside Nav -->
 		</div>
 		<!-- /Nav -->
-
 		{% block page_header %}
 
 		{% endblock page_header %}
@@ -97,9 +95,12 @@
 	</footer>
 	<!-- /Footer -->
 
-	<!-- jQuery Plugins -->
+	<!-- JavaScript Plugins -->
 	{% include 'js-import.html' %}
-
+	
+	{% block jquery %}
+		
+	{% endblock jquery %}
+		
 </body>
-
 </html>

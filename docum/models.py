@@ -64,9 +64,7 @@ class Document(models.Model):
     # def get_api_like_url(self):
     #     return reverse("quiz-api-like", kwargs={"slug": self.slug})
 
-    # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 300px x 200px
     def save(self, **kwargs):
-        # Ghi đè phương thức save()
         super().save()
         img = Image.open(self.image.path)
         if img.height > 750 or img.width > 450:
