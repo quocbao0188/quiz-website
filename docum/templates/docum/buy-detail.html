@@ -31,6 +31,7 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
+                <th scope="col">Credit</th>
                 <th scope="col">Category</th>
                 <th scope="col">Species</th>
                 <th scope="col">Create Date</th>
@@ -42,6 +43,7 @@
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td><a href="{% url 'doc-detail' q.items.slug %}"><strong>{{ q.items.title }}</strong></a></td>
+                    <td>{{ q.items.credit }} Coin</td>
                     <td>{{ q.items.catago.title  }}</td>
                     <td>{{ q.items.get_species_display }}</td>
                     <td>{{ q.create_at }}</td>

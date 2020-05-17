@@ -101,6 +101,14 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
+    },
+    'postgresql': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hushare',
+        'USER': 'postgres',
+        'PASSWORD': '0188',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -134,10 +142,12 @@ AUTHENTICATION_BACKENDS = (
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'vi-VI'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'vi-VI'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
+
+# DATE_INPUT_FORMATS = ('%d-%m-%Y')
 
 USE_I18N = True
 

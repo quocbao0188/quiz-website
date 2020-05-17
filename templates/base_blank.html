@@ -34,11 +34,11 @@
 
 					<!-- nav -->
 					{% include 'navbar.html' %}
-					{% include 'navbar-account.html' %}
 					<!-- /nav -->
 
 					<!-- search & aside toggle -->
 					<div class="nav-btns">
+						{% include 'navbar-account.html' %}
 						<button class="aside-btn"><i class="fa fa-bars"></i></button>
 						<a class="search-btn" href="{% url 'search:input-search' %}"><i class="fa fa-search"></i></a>
 					</div>

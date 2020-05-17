@@ -9,7 +9,7 @@ class CommentInLine(admin.TabularInline):
     extra = 1
 class DocAdmin(admin.ModelAdmin):
     model = Document
-    list_display = ['title', 'create_at', 'updated_at', 'credit']
+    list_display = ['title', 'species', 'create_at', 'updated_at', 'credit']
     search_fields = ['title']
     date_hierarchy = 'create_at'
     inlines = [CommentInLine]

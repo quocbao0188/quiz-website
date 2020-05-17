@@ -58,8 +58,6 @@ def quiz_detail(request, slug=None):
         }
         questions.append(question)
 
-    if not transcript_test.exists():
-        # Create transcript
         if request.method == 'POST':
             for z in que:
                 answers = Answer.objects.filter(question_id=z.id)
@@ -88,12 +86,19 @@ def quiz_detail(request, slug=None):
             percent_correct = point*10
             print(percent_correct)
             wrong_answer = (questions_count-total_not_done)-total_correct
-            Transcript.objects.create(
-                user=request.user,
-                quiz_item_id=quiz.id,
-                total_score=percent_correct,
-                answer_correct=total_correct,
-                question_number=questions_count)
+            if not transcript_test.exists():
+                Transcript.objects.create(
+                    user=request.user,
+                    quiz_item_id=quiz.id,
+                    total_score=percent_correct,
+                    answer_correct=total_correct,
+                    question_number=questions_count)
+            else:
+                trans = Transcript.objects.get(user=request.user, quiz_item=quiz.id)
+                trans.total_score = percent_correct
+                trans.answer_correct = total_correct
+                trans.question_number = questions_count
+                trans.save()
             context = {
                 'questions_count': questions_count,
                 'total_correct': total_correct,
@@ -103,52 +108,6 @@ def quiz_detail(request, slug=None):
                 'quiz': quiz
             }
             return render(request, 'quiz/quiz-result.html', context)
-        else:
-            pass
-    else:
-        trans = Transcript.objects.get(user=request.user, quiz_item=quiz.id)
-        if request.method == 'POST':
-            for z in que:
-                answers = Answer.objects.filter(question_id=z.id)
-                for answer in answers:
-                    if answer.is_correct is True:
-                        list_answer.append(answer.id)
-                    else:
-                        pass
-                choice_id = request.POST.get('choice-' + str(z.id))
-
-                if choice_id is None:
-                    choice_id = "0"
-                    not_done.append(choice_id)
-                attempted_list.append(choice_id)
-
-            results = list(map(int, attempted_list))
-            user_attempted = results
-            same_values = set(list_answer) & set(results)
-            total_correct = len(same_values)
-            point = total_correct/questions_count
-            total_not_done = len(not_done)
-            print(not_done)
-            print(total_not_done)
-            percent_correct = point*10
-            print(percent_correct)
-            print(list_answer)
-            wrong_answer = (questions_count-total_not_done)-total_correct
-            trans.total_score = percent_correct
-            trans.answer_correct = total_correct
-            trans.question_number = questions_count
-            trans.save()
-            context = {
-                'questions_count': questions_count,
-                'total_correct': total_correct,
-                'wrong_answer': wrong_answer,
-                'total_not_done': total_not_done,
-                'score': percent_correct,
-                'quiz': quiz,
-            }
-            return render(request, 'quiz/quiz-result.html', context)
-        else:
-            pass
     context = {
         'quiz': quiz,
         'questions': questions
@@ -189,6 +148,7 @@ def transcript_show(request):
     }
     return render(request, template_name, post)
 
+@login_required
 def del_transcript(request, id=None):
     trans = get_object_or_404(Transcript, id=id)
     trans.delete()

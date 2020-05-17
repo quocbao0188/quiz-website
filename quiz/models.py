@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from PIL import Image
 from django.utils import timezone
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 
 class CategoryQuiz(models.Model):
     title = models.CharField(max_length=100)
@@ -45,6 +46,9 @@ class Quiz(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+@receiver(pre_save, sender=Quiz)
+def slugify_title(sender, instance, *args, **kwargs):
+    instance.slug = slugify(instance.title)
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
@@ -53,11 +57,6 @@ class Question(models.Model):
     def __str__(self):
         return self.label
 
-    # def get_answers_list(self):
-    #     return [(answer.id, answer.text) for answer in Answer.objects.filter(question=self)]
-
-
-
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
     text = models.CharField(max_length=1000)
@@ -65,8 +64,6 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.text
-
-    
 
 class Transcript(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -80,6 +77,3 @@ class Transcript(models.Model):
     def __str__(self):
         return f'{self.user.username} {self.quiz_item.title} test score'
 
-@receiver(pre_save, sender=Quiz)
-def slugify_title(sender, instance, *args, **kwargs):
-    instance.slug = slugify(instance.title)
