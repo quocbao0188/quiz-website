@@ -56,9 +56,21 @@
     <!-- /share -->
 
     <p>{{ quiz.description|safe|linebreaks }}</p>
+
     <div class="form-group">
         <div class="text-center">
+            {% if user.is_authenticated %}
+            {% if user.profile.image.url != '' %}
             <a id="startButton" class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}"><i class="fas fa-play"></i> Start Now</a>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                You need to finish your <a href="{% url 'profile' %}" class="alert-link">profile</a> to take an exam.
+            </div>
+            {% endif %}
+            {% else %}
+            <h4>You have to login to download</h4>
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login Now</a>
+            {% endif %}
         </div>
     </div>
     <!-- /post -->

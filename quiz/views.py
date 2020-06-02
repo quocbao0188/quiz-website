@@ -92,11 +92,15 @@ def quiz_detail(request, slug=None):
                     quiz_item_id=quiz.id,
                     total_score=percent_correct,
                     answer_correct=total_correct,
+                    unanswered=total_not_done,
+                    wrong_answer=wrong_answer,
                     question_number=questions_count)
             else:
                 trans = Transcript.objects.get(user=request.user, quiz_item=quiz.id)
                 trans.total_score = percent_correct
                 trans.answer_correct = total_correct
+                trans.unanswered = total_not_done
+                trans.wrong_answer = wrong_answer
                 trans.question_number = questions_count
                 trans.save()
             context = {
@@ -153,11 +157,34 @@ def del_transcript(request, id=None):
     trans = get_object_or_404(Transcript, id=id)
     trans.delete()
     return redirect('transcript')
+# ---------------------------------------------------------------------------
+def transcript_detail(request, slug=None):
+    questions = []
+    template_name = 'quiz/transcript-detail.html'
+    quiz = get_object_or_404(Quiz, slug=slug, publish=True)
+    que = Question.objects.filter(quiz_id=quiz.id)
+    take_trans = get_object_or_404(Transcript, user=request.user, quiz_item=quiz)
+
+    for q in que:
+        ans = Answer.objects.filter(question_id=q.id)
+        question = {
+            'label': q.label,
+            'aidi': q.id,
+            'answer': ans
+        }
+        questions.append(question)
+
+    post = {
+        'obj': take_trans,
+        'quiz': quiz,
+        'questions': questions,
+    }
+    return render(request, template_name, post)
 
 def catago_quiz(request, slug=None):
     template_name = 'quiz/catagories-detail.html'
     catago = get_object_or_404(CategoryQuiz, slug=slug)
-    list_quiz = catago.quizs.filter(publish=True)
+    list_quiz = catago.quizs.filter(publish=True).annotate(question_count=Count('questions'))
     content = {
         'catago': catago,
         'list_quiz': list_quiz,

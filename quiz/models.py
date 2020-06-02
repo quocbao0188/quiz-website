@@ -70,6 +70,8 @@ class Transcript(models.Model):
     quiz_item = models.ForeignKey(Quiz, on_delete=models.CASCADE, verbose_name = "Quiz items")
     total_score = models.FloatField(default=0, verbose_name = "Total score")
     answer_correct = models.PositiveSmallIntegerField(default=0, verbose_name='Total number of correct answers')
+    unanswered = models.PositiveSmallIntegerField(default=0, verbose_name='Unanswered')
+    wrong_answer = models.PositiveSmallIntegerField(default=0, verbose_name='Wrong Answers')
     question_number = models.PositiveSmallIntegerField(default=0, verbose_name='Total questions')
     create_at = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)

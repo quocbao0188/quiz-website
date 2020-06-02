@@ -31,7 +31,7 @@ class Profile(models.Model):
     acc_type = models.CharField(max_length=4, choices=PREMIUM_STATUS, default=FREE, verbose_name = "Account type")
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
     phone = PhoneNumberField(verbose_name = "Phone number", null=True, blank=True, unique=True)
-    student_id = models.BigIntegerField(null=True, blank=True, unique=True)
+    student_id = models.BigIntegerField(unique=True)
     faculty = models.CharField(max_length=50)
     birthday = models.DateField(default=timezone.now)
     objects = models.Manager()

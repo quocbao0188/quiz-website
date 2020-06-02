@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-<title>{{ quiz.name }}</title>
+<title>{{ quiz.title }}</title>
 {% endblock title %}
 
 {% block page_header %}
@@ -45,32 +45,28 @@
 <!-- post -->
 <div class="col-md-12" id="printArea">
     {% for q in questions %}
-    <div class="shadow-box">
-        <h1 style="color: brown;">Question {{ forloop.counter }}:</h1>
+    <div class="answer-box">
+        <h1 class="brown-text">Question {{ forloop.counter }}:</h1>
         <p>{{ q.label|safe }}</p>
-
-        <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
+        <hr>
         {% for a in q.answer %}
         <div class="form-group">
 
             {% if a.is_correct is True %}
-            <p style=" background-color: rgba(11, 173, 11, 0.219); font-size: 20px; color: black; ">
-                <strong>{{ a.text }}</strong></p>
+            <p class="correct-answer"><i class="fas fa-check"></i><strong> {{ a.text }}</strong></p>
             {% else %}
-            <p style="font-size:20px; color: black; ">{{ a.text }}</p>
+            <p class="answer">{{ a.text }}</p>
             {% endif %}
 
             {% for ua in user_attempted %}
             {% if ua == a.pk %}
-            <p style="font-size: 20px; color: black; "><strong>You choice: </strong><strong
-                    style="color: red;">{{ a.text }}</strong></p>
+            <p class="answer"><strong>You choice: </strong><strong class="red-text">{{ a.text }}</strong></p>
             {% endif %}
             {% endfor %}
 
         </div>
         {% endfor %}
     </div>
-    <hr>
     {% endfor %}
 </div>
 

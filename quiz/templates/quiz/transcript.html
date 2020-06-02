@@ -32,8 +32,6 @@
                     <th scope="col">#</th>
                     <th scope="col">Quiz</th>
                     <th scope="col">Score</th>
-                    <th scope="col">Progress</th>
-                    <!-- <th scope="col">Unanswered</th> -->
                     <th scope="col">Create Date</th>
                     <th scope="col">Updated Date</th>
                     <th scope="col">Rank</th>
@@ -43,34 +41,32 @@
             </thead>
             <tbody>
                 {% for q in obj %}
-                <tr>
+                <tr class='clickable-row' data-href="{% url 'transcript-detail' slug=q.quiz_item.slug %}">
                     <th scope="row">{{ forloop.counter }}</th>
                     <td><strong>{{ q.quiz_item.title }}</strong></td>
-                    <td style="color: red;"><strong>{{ q.total_score|floatformat }}</strong></td>
-                    <!-- <td></td> -->
-                    <td>{{ q.answer_correct}}/{{ q.question_number }}</td>
+                    <td style="color:red;"><strong>{{ q.total_score|floatformat }}</strong></td>
                     <td>{{ q.create_at }}</td>
                     <td>{{ q.updated_at }}</td>
                     {% if q.total_score < 4.0 %}
-                    <td><strong style="color: brown;">Poor</strong></td>
+                    <td><strong style="color:brown;">Poor</strong></td>
                     {% elif q.total_score == 4.0 or q.total_score <= 4.9 %}
-                    <td><strong style="color: gray;">Weak</strong></td>
+                    <td><strong style="color:gray;">Weak</strong></td>
                     {% elif q.total_score == 5.0 or q.total_score <= 5.9 %}
-                    <td><strong style="color: darkgoldenrod;">Ordinary</strong></td>
+                    <td><strong style="color:darkgoldenrod;">Ordinary</strong></td>
                     {% elif q.total_score == 6.0 or q.total_score <= 6.9 %}
-                    <td><strong style="color: green;">Average Good</strong></td>
+                    <td><strong style="color:green;">Average Good</strong></td>
                     {% elif q.total_score == 7.0 or q.total_score <= 7.9 %}
-                    <td><strong style="color: purple;">Good</strong></td>
+                    <td><strong style="color:purple;">Good</strong></td>
                     {% elif q.total_score == 8.0 or q.total_score <= 8.9 %}
-                    <td><strong style="color: purple;">Very Good</strong></td>
+                    <td><strong style="color:gold;">Very Good</strong></td>
                     {% else %}
-                    <td><strong style="color: purple;">Excellent</strong></td>
+                    <td><strong style="color:deeppink;">Excellent</strong></td>
                     {% endif %}
                     
                     {% if q.total_score < 4.5 %}
-                    <td style="color: red;"><i class="fas fa-times"></i></td>
+                    <td style="color:red;"><i class="fas fa-times"></i></td>
                     {% else %}
-                    <td style="color: green;"><i class="fas fa-check"></i></td>
+                    <td style="color:green;"><i class="fas fa-check"></i></td>
                     {% endif %}
 
                     <td><a id="deleteTrans" href="{% url 'del-transcript' q.id %}" class="btn btn-danger"><i class="fas fa-trash"></i></a></td>
@@ -89,6 +85,10 @@
 {% block jquery %}
 <script>
     $(document).ready(function(){
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+        
         $('#deleteTrans').click(function(){
             if(confirm("Do you want to delete this ?")){
                 return true;

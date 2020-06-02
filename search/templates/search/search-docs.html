@@ -46,7 +46,7 @@
                 <span class="post-date">{{ result.date_posted|date:"F d, Y" }}</span>
             </div>
             <h3 class="post-title"><a href="{{ result.get_absolute_url }}">{{ result.title }}</a></h3>
-            <p>{{ result.content|truncatechars:100 }}</p>
+            <p>{{ result.content|truncatewords:20|safe }}</p>
 
             {% if result.credit >= 1 %}
             <p><strong>Credit: </strong>{{ result.credit }} Coin</p>

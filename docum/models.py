@@ -41,14 +41,15 @@ class Document(models.Model):
     catago = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='documents', verbose_name = "Category")
     content = models.TextField(verbose_name = "Description")
     link_url = models.URLField(max_length=255, unique=True, verbose_name = "Direct link")
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    backup_link = models.URLField(max_length=255, null=True, blank=True, unique=True, verbose_name = "Backup link")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField(default='hushare-default.png', null=True)
-    like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
+    # like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
+    publish = models.BooleanField(blank=True, default=False, verbose_name="Publish",help_text="If yes, the material is displayed in the material list")
     create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     
-
     def __str__(self):
         return self.title
 

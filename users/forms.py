@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'id':'email'}))
 
     class Meta:
         model = User
@@ -66,13 +66,13 @@ class UserRegisterForm(UserCreationForm):
 class ProfileRegisterForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['phone', 'student_id', 'gender', 'birthday', 'faculty']
+        fields = ['student_id', 'phone', 'gender', 'birthday', 'faculty']
         labels = {
         "student_id": "Student ID",
         }
         help_texts = {
-            'phone': 'For example: +84 0981029***',
             'student_id': 'For example: 1711061***',
+            'phone': 'For example: +84 0981029***',
             'faculty': 'For example: Information Technology'
         }
         widgets = {
@@ -93,13 +93,13 @@ class ProfileUpdateForm(forms.ModelForm):
     # birthday = forms.DateField(widget=forms.DateInput(attrs={'class': 'datepicker'}), input_formats=settings.DATE_INPUT_FORMATS)
     class Meta:
         model = Profile
-        fields = ['phone', 'student_id', 'gender', 'birthday', 'faculty', 'image']
+        fields = ['student_id','phone', 'gender', 'birthday', 'faculty', 'image']
         labels = {
         "student_id": "Student ID",
         }
         help_texts = {
-            'phone': 'For example: +84 0981029***',
             'student_id': 'For example: 1711061***',
+            'phone': 'For example: +84 0981029***',
             'faculty': 'For example: Information Technology'
         }
         widgets = {

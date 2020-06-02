@@ -37,8 +37,7 @@
                     <span class="post-date">{{ quizs.create_at|date:"F d, Y" }}</span>
                 </div>
                 <h3 class="post-title"><a href="{% url 'pre-quiz' quizs.slug %}">{{ quizs.title }}</a></h3>
-                <p><strong>Number of questions: </strong>{{ quizs.question_count }} | <strong>Time:
-                    </strong>{{ quizs.time }} minute</p>
+                <p><strong>Number of questions: <span class="red-text">{{ quizs.question_count }}</span></strong> | <strong>Time: <span class="red-text">{{ quizs.time }} minute</span></strong></p>
                 <p>{{ quizs.description|truncatewords:20|safe }}</p>
             </div>
         </div>

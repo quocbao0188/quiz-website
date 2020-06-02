@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Document, Category, Order
+from .models import Document, Category, Order, Comment
 from users.models import Profile
 from django.contrib import messages
 from django.http import HttpResponse
@@ -19,7 +19,7 @@ from django.http import HttpResponseRedirect
 # List Document
 def document_list(request):
     template_name = 'docum/documents.html'
-    doc_list = Document.objects.filter(species='DOC')
+    doc_list = Document.objects.filter(species='DOC', publish=True)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(doc_list, 5)
@@ -34,13 +34,13 @@ def document_list(request):
     post = {
         'doc': docs,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-create_at').all()[:5],
+        'most': Document.objects.order_by('-create_at').filter(species='DOC', publish=True)[:5],
     }
     return render(request, template_name, post)
 
 def lab_list(request):
     template_name = 'docum/lab.html'
-    labs_list = Document.objects.filter(species='LAB')
+    labs_list = Document.objects.filter(species='LAB', publish=True)
     page = request.GET.get('page', 1)
     paginator = Paginator(labs_list, 5)
 
@@ -54,7 +54,7 @@ def lab_list(request):
     post = {
         'lab': labs,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-create_at').all()[:5],
+        'most': Document.objects.order_by('-create_at').filter(species='LAB', publish=True)[:5],
     }
     return render(request, template_name, post)
 
@@ -79,29 +79,37 @@ def document_detail(request, slug=None):
         'ord': order_obj,
         'form': form,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-create_at').all()[:5],
+        'most': Document.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, post)
+
+def delete_comment(request, id=None):
+    comment = get_object_or_404(Comment, id=id)
+    if comment.user == request.user:
+        comment.delete()
+        messages.success(request, "Successfully Deleted")
+        return redirect('doc-detail')
+        # return HttpResponseRedirect(request.path_info)
 
 @login_required
 def buy_item(request, slug=None):
     item = get_object_or_404(Document, slug=slug)
     order_qs = Order.objects.filter(user=request.user, items_id=item.id)
-    user_now = Profile.objects.get(user=request.user)
-
-    if not order_qs.exists():
-        if user_now.credit >= item.credit:
-            Order.objects.create(user=request.user, items_id=item.id)
-            user_now.credit = user_now.credit - item.credit
-            print(user_now.credit)
-            user_now.save()
-            messages.success(request, f'You have successfully purchased')
+    if Profile.objects.filter(user=request.user).exists():
+        user_now = Profile.objects.get(user=request.user)
+        if not order_qs.exists():
+            if user_now.credit >= item.credit:
+                Order.objects.create(user=request.user, items_id=item.id)
+                user_now.credit = user_now.credit - item.credit
+                print(user_now.credit)
+                user_now.save()
+                messages.success(request, f'You have successfully purchased')
+            else:
+                messages.warning(request, f'You do not have enough money to buy documents')
         else:
-            messages.warning(request, f'You do not have enough money to buy documents')
+            messages.warning(request, f'You have purchased before')
     else:
-        messages.warning(request, f'You have purchased before')
-
-
+        messages.warning(request, f'You have to finish your Profile first !')
     # if order_qs.exists():
     #     messages.warning(request, f'You have successfully purchased')
     # else:
@@ -124,12 +132,12 @@ def buy_item(request, slug=None):
 def catago_list(request, slug=None):
     template_name = 'docum/catagories-detail.html'
     catago = get_object_or_404(Category, slug=slug)
-    list_doc = catago.documents.all()
+    list_doc = catago.documents.filter(publish=True)
     content = {
         'catago': catago,
         'list_doc': list_doc,
         'cata': Category.objects.all(),
-        'most': Document.objects.order_by('-create_at').all()[:5],
+        'most': Document.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, content)
 

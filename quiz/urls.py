@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^catagories-quiz/(?P<slug>[\w-]+)/$', views.catago_quiz, name='catago-quiz'),
     path('transcript/', views.transcript_show, name='transcript'),
     url(r'^delete/(?P<id>\d+)/$', views.del_transcript, name='del-transcript'),
+    url(r'^transcript/detail/(?P<slug>[\w-]+)/$', views.transcript_detail, name='transcript-detail'),
     # url(r'^quiz/(?P<slug>[\w-]+)/like/$', QuizLikeRedirectView.as_view(), name='quiz-like'),
     # url(r'^api/quiz/(?P<slug>[\w-]+)/like/$', QuizLikeAPIToggle.as_view(), name='quiz-api-like'),
 ]

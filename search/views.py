@@ -14,6 +14,7 @@ def search_docs(request):
         submitbutton = request.GET.get('submit')
         if type_search == '1':
             if query is not None:
+                # &Q(species__icontains='DOC')
                 lookups = Q(title__icontains=query)&Q(species__icontains='DOC')
                 results = Document.objects.filter(lookups).distinct()
                 content = {
@@ -36,9 +37,9 @@ def search_docs(request):
                 return render(request, 'search/search-docs.html', content)
             else:
                 return render(request, 'search/search-docs.html')
-        else:
+        elif type_search == '3':
             if query is not None:
-                lookups = Q(title__icontains=query)
+                lookups = Q(title__icontains=query)|Q(category_quiz__title__icontains=query)
                 results = Quiz.objects.filter(lookups).distinct()
                 content = {
                     'results': results,
@@ -48,5 +49,29 @@ def search_docs(request):
                 return render(request, 'search/search-quizzes.html', content)
             else:
                 return render(request, 'search/search-quizzes.html')
+        elif type_search == '4':
+            if query is not None:
+                lookups = Q(title__icontains=query)&Q(species__icontains='OTH')
+                results = Document.objects.filter(lookups).distinct()
+                content = {
+                    'results': results,
+                    'submitbutton': submitbutton,
+                    'header': 'Other Search'
+                }
+                return render(request, 'search/search-docs.html', content)
+            else:
+                return render(request, 'search/search-docs.html')
+        else:
+            if query is not None:
+                lookups = Q(title__icontains=query)|Q(catago__title__icontains=query)
+                results = Document.objects.filter(lookups).distinct()
+                content = {
+                    'results': results,
+                    'submitbutton': submitbutton,
+                    'header': 'Document, Practice Labs and Other Search'
+                }
+                return render(request, 'search/search-docs.html', content)
+            else:
+                return render(request, 'search/search-docs.html')
     else:
         return render(request, 'search/search-quizzes.html')

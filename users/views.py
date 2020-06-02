@@ -4,6 +4,7 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, ProfileR
 from django.contrib.auth.decorators import login_required
 import requests
 from django.conf import settings
+from .models import Profile
 
 # def register(request):
 #     if request.method == 'POST':
@@ -61,17 +62,33 @@ def register(request):
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if Profile.objects.filter(user=request.user).exists():
+            p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+            if u_form.is_valid() and p_form.is_valid():
+                u_form.save()
+                p_form.save()
+                username = u_form.cleaned_data.get('username')
+                messages.success(request, f'Your account { username } has been updated !')
+                return redirect('profile')
+        else:
+            p_form = ProfileUpdateForm(request.POST, request.FILES)
+            if u_form.is_valid() and p_form.is_valid():
 
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            username = u_form.cleaned_data.get('username')
-            messages.success(request, f'Your account { username } has been updated !')
-            return redirect('profile')
+                new_user = u_form.save()
+                profiles = p_form.save(commit=False)
+                profiles.user = new_user
+                profiles.save()
+
+                username = u_form.cleaned_data.get('username')
+                messages.success(request, f'Your account { username } has been updated !')
+                return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
+        if Profile.objects.filter(user=request.user).exists():
+            p_form = ProfileUpdateForm(instance=request.user.profile)
+        else:
+            p_form = ProfileUpdateForm()
+            messages.warning(request, f'Your account does not have information. Please give us more infomation about you !')
     
     context = {
         'u_form': u_form,

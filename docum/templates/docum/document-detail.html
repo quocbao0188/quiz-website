@@ -58,39 +58,64 @@
         data-action="like" data-size="large" data-share="true"></div>
     <!-- /facebook like -->
 
-    <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
-            href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p>
+    <!-- <p><a class='like-btn' data-href='{{ doc.get_api_like_url }}' data-likes='{{ doc.like.count }}'
+            href='{{ doc.get_like_url }}'>{{ doc.like.count }} Like</a></p> -->
 
     <p>{{ doc.content|safe|linebreaks }}</p>
 
+    {% if user.is_authenticated %}
+    {% if user.profile.image.url != '' %}
+    {% if ord.exists and ord != None %}
+    <!-- Button trigger modal -->
     <div class="text-center">
-
-        {% if user.is_authenticated %}
-
-        {% if ord.exists and ord != None %}
-        <a class="btn btn-success btn-lg" href="{{ doc.link_url }}" target="_blank"><i class="fas fa-download"></i>
-            Download</a>
-        {% else %}
-
-        {% if doc.credit >= 1 %}
-        <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }} Coin</a>
-        {% else %}
-        <a class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}"><i class="fas fa-download"></i>Download
-            for free</a>
-        {% endif %}
-
-        {% endif %}
-
-        {% else %}
-        <h4>You have to login to download</h4>
-        <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login Now</a>
-        {% endif %}
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Download</button>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="myModalLabel" style="text-align: center;">Download Menu</h2>
+                </div>
+                <div class="modal-body">
+                    <h3>Main download link</h3>
+                    <p>This is a link <a style="color: blue;" href="{{ doc.link_url }}" target="_blank">{{ doc.title }}</a></p>
+                    
+                    {% if doc.backup_link != None %}
+                    <hr>
+                    <h3>Backup link</h3>
+                    <p><a style="color: blue;" href="{{ doc.backup_link }}" class="tooltip-test" title="Tooltip">{{ doc.title }}</a> have tooltips on hover.</p>
+                    {% endif %}
+                        
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% if doc.credit >= 1 %}
+    <a id="buyNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }}
+        Coin</a>
+    {% else %}
+    <a id="downNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}"><i
+            class="fas fa-download"></i> Download for free</a>
+    {% endif %}
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        You need to finish your <a href="{% url 'profile' %}" class="alert-link">profile</a> to download.
+    </div>
+    {% endif %}
+    {% else %}
+    <h4>You have to login to download</h4>
+    <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login
+        Now</a>
+    {% endif %}
 
     <!-- /post -->
 
-
-    {% if user.is_authenticated %}
     <!-- comments -->
     <div class="row">
         <hr>
@@ -105,39 +130,68 @@
                     <div class="media-heading">
                         <h4>{{ comment.user }}</h4>
                         <span class="time">{{ comment.create_at }}</span>
+                        {% if comment.user == user %}
+                        <a href="{% url 'delete-comment' id=comment.id %}" class="btn btn-danger btn-sm"><i
+                                class="fas fa-times"></i></a>
+                        {% endif %}
                     </div>
                     <p>{{ comment.body|linebreaks|safe }}</p>
                 </div>
             </div>
             <!-- /comment -->
         </div>
+        {% empty %}
+        <h4>There is no comments</h4>
+        <br>
         {% endfor %}
+        {% if user.is_authenticated %}
         <form action="{% url 'doc-detail' doc.slug %}" method="POST">
             {% csrf_token %}
             {{ form|crispy }}
             <input class="btn btn-primary btn-lg" type="submit" value="Comment">
         </form>
+        {% else %}
+        <div class="row">
+            <hr>
+            <div class="alert alert-info" role="alert">
+                You must be <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login</a> to comment
+            </div>
+        </div>
+        {% endif %}
     </div>
     <!-- /comments -->
-    
-    {% else %}
-    <div class="row">
-        <hr>
-        <div class="alert alert-info" role="alert">
-            You must be <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login</a> to comment
-        </div>
-    </div>
-    {% endif %}
-    
+
     <!-- comment -->
     <div class="row">
         <hr>
         <div class="fb-comments" data-href="http://127.0.0.1:8000/document/{{doc.slug}}/" data-order-by="reverse_time"
-        data-numposts="5" data-width="100%">
+            data-numposts="5" data-width="100%">
         </div>
     </div>
     <!-- /comment -->
 </div>
 {% endblock body %}
 
-    
+{% block jquery %}
+<script>
+    $(document).ready(function () {
+        var value = '{{ doc.credit }}'
+        $("#buyNow").click(function () {
+            if (confirm('Do you want to buy this property for ' + value + ' Coin?')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+        $("#downNow").click(function () {
+            if (confirm('Do you want to download for free ?')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock jquery %}
