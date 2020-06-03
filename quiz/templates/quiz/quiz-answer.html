@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-<title>{{ quiz.name }}</title>
+<title>{{ quiz.title }}</title>
 {% endblock title %}
 
 {% block page_header %}
@@ -43,26 +43,51 @@
 
 {% block body %}
 <!-- post -->
-<form name="quiz" class="form" id="myquiz" action="" method="">
+<div class="col-md-12" id="printArea">
     {% for q in questions %}
-    <legend style="color: brown;"><strong>{{ forloop.counter }}: {{ q.label }}</strong></legend>
-    <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
-    {% for a in q.answer %}
-    <div class="form-group">
-        {% if a.is_correct is True %}
-        <p style="background-color: rgba(11, 173, 11, 0.219); font-size:20px; color: black; "><strong>{{ a.text }}</strong></p>
-        {% else %}
-        <p style="font-size:20px;">{{ a.text }}</p>
-        {% endif %}
-            
+    <div class="answer-box">
+        <h1 class="brown-text">Question {{ forloop.counter }}:</h1>
+        <p>{{ q.label|safe }}</p>
+        <hr>
+        {% for a in q.answer %}
+        <div class="form-group">
+
+            {% if a.is_correct is True %}
+            <p class="correct-answer"><i class="fas fa-check"></i><strong> {{ a.text }}</strong></p>
+            {% else %}
+            <p class="answer">{{ a.text }}</p>
+            {% endif %}
+
+            {% for ua in user_attempted %}
+            {% if ua == a.pk %}
+            <p class="answer"><strong>You choice: </strong><strong class="red-text">{{ a.text }}</strong></p>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+        {% endfor %}
     </div>
     {% endfor %}
-    {% endfor %}
-    <!-- <div class="form-group">
-                <div class="text-center">
-                    <button class="btn btn-success btn-lg" type="submit">Submit</button>
-                </div>
-            </div> -->
-</form>
+</div>
+
+<div class="text-center">
+    <button id="printButton" class="btn btn-success btn-lg" onclick="printDiv('printArea')"><i class="fas fa-print"></i>
+        Print
+        results</button>
+</div>
 <!-- /post -->
 {% endblock body %}
+
+{% block jquery %}
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+</script>
+{% endblock jquery %}

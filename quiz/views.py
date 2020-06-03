@@ -6,30 +6,30 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
 from django.db.models import Count
-from .models import Quiz, Question, Answer, QuizProfile, AttemptedQuestion, CategoryQuiz
+from .models import Quiz, Question, Answer, Transcript, CategoryQuiz
 from django.contrib.auth.decorators import login_required
-
+# from django.db.models import Q
 
 def quiz_list(request):
     template_name = 'quiz/quiz.html'
-    quiz = Quiz.objects.all().annotate(question_count=Count('questions'))
+    quiz = Quiz.objects.filter(publish=True).annotate(question_count=Count('questions'))
     context = {
         'quiz': quiz,
-        'cata': CategoryQuiz.objects.all().annotate(docs_count=Count('quizs'))[:5],
-        'most': Quiz.objects.order_by('-created').all()[:5],
+        'catania': CategoryQuiz.objects.all(),
+        'mosque': Quiz.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, context)
 
 
 def pre_quiz(request, slug=None):
     template_name = 'quiz/pre-detail.html'
-    quiz = get_object_or_404(Quiz, slug=slug)
+    quiz = get_object_or_404(Quiz, slug=slug, publish=True)
     question_count = Question.objects.filter(quiz_id=quiz.id).count()
     context = {
         'quiz': quiz,
-        'question_count': question_count
-        # 'cata': CategoryQuiz.objects.all().annotate(docs_count=Count('quizs'))[:5],
-        # 'most': Quiz.objects.order_by('-created').all()[:5],
+        'question_count': question_count,
+        'catania': CategoryQuiz.objects.all(),
+        'mosque': Quiz.objects.order_by('-create_at').filter(publish=True)[:5],
     }
     return render(request, template_name, context)
 
@@ -38,15 +38,18 @@ def pre_quiz(request, slug=None):
 def quiz_detail(request, slug=None):
     list_answer = []
     attempted_list = []
-    questions = []  # Tạo list chứa các câu hỏi để gởi xuống html
+    # Create lists containing questions to send to html
+    questions = []
+    not_done = []
+    global user_attempted
     template_name = 'quiz/quiz-detail.html'
-    quiz = get_object_or_404(Quiz, slug=slug)   # Lấy cuộc thi được chọn
-    # Chọn những câu hỏi trong kì thi
+    # Get the selected quiz
+    quiz = get_object_or_404(Quiz, slug=slug, publish=True)
     que = Question.objects.filter(quiz_id=quiz.id)
+    transcript_test = Transcript.objects.filter(user=request.user, quiz_item=quiz.id)
     questions_count = que.count()
 
     for q in que:
-        # Chọn bộ những câu trả lời thuộc câu hỏi
         ans = Answer.objects.filter(question_id=q.id)
         question = {
             'label': q.label,
@@ -55,58 +58,75 @@ def quiz_detail(request, slug=None):
         }
         questions.append(question)
 
-    # quiz_profile, created = QuizProfile.objects.get_or_create(user=request.user)
+        if request.method == 'POST':
+            for z in que:
+                answers = Answer.objects.filter(question_id=z.id)
+                for answer in answers:
+                    if answer.is_correct is True:
+                        list_answer.append(answer.id)
+                    else:
+                        pass
+                choice_id = request.POST.get('choice-' + str(z.id))
+                # Type conversion NoneType
+                if choice_id is None:
+                    choice_id = "0"
+                    not_done.append(choice_id)
+                attempted_list.append(choice_id)
 
-    if request.method == 'POST':
-        for z in que:
-            answers = Answer.objects.filter(question_id=z.id)
-            for answer in answers:
-                if answer.is_correct is True:
-                    list_answer.append(answer.id)
-                else:
-                    pass
-
-            # question_id = request.GET.get('question-' + str(z.id))
-            choise_id = request.POST.get('choise-' + str(z.id))
-            # Ép kiểu NoneType
-            if choise_id is None:
-                choise_id = "0"
-
-            attempted_list.append(choise_id)
-
-        # Ép kiểu String to Int và đưa vào list
-        results = list(map(int, attempted_list))
-        same_values = set(list_answer) & set(results)  # so sanh
-        totail_correct = len(same_values)
-        point = totail_correct/questions_count
-        percent_correct = point*10
-        print(percent_correct)
-        context = {
-            'questions_count': questions_count,
-            'totail_correct': totail_correct,
-            'score': percent_correct,
-            'quiz': quiz
-        }
-        return render(request, 'quiz/quiz-result.html', context)
-    else:
-        pass
+            # Type conversion from string to Int and put it into list
+            results = list(map(int, attempted_list))
+            user_attempted = results
+            # Compare
+            same_values = set(list_answer) & set(results)
+            total_correct = len(same_values)
+            point = total_correct/questions_count
+            total_not_done = len(not_done)
+            print(not_done)
+            print(total_not_done)
+            percent_correct = point*10
+            print(percent_correct)
+            wrong_answer = (questions_count-total_not_done)-total_correct
+            if not transcript_test.exists():
+                Transcript.objects.create(
+                    user=request.user,
+                    quiz_item_id=quiz.id,
+                    total_score=percent_correct,
+                    answer_correct=total_correct,
+                    unanswered=total_not_done,
+                    wrong_answer=wrong_answer,
+                    question_number=questions_count)
+            else:
+                trans = Transcript.objects.get(user=request.user, quiz_item=quiz.id)
+                trans.total_score = percent_correct
+                trans.answer_correct = total_correct
+                trans.unanswered = total_not_done
+                trans.wrong_answer = wrong_answer
+                trans.question_number = questions_count
+                trans.save()
+            context = {
+                'questions_count': questions_count,
+                'total_correct': total_correct,
+                'wrong_answer': wrong_answer,
+                'total_not_done': total_not_done,
+                'score': percent_correct,
+                'quiz': quiz
+            }
+            return render(request, 'quiz/quiz-result.html', context)
     context = {
         'quiz': quiz,
         'questions': questions
     }
     return render(request, template_name, context)
 
-
+@login_required
 def see_answer(request, slug=None):
-    questions = []  # Tạo list chứa các câu hỏi để gởi xuống html
+    questions = []
     template_name = 'quiz/quiz-answer.html'
-    quiz = get_object_or_404(Quiz, slug=slug)   # Lấy cuộc thi được chọn
-    # Chọn những câu hỏi trong kì thi
+    quiz = get_object_or_404(Quiz, slug=slug, publish=True)
     que = Question.objects.filter(quiz_id=quiz.id)
     questions_count = que.count()
 
     for q in que:
-        # Chọn bộ những câu trả lời thuộc câu hỏi
         ans = Answer.objects.filter(question_id=q.id)
         question = {
             'label': q.label,
@@ -117,52 +137,61 @@ def see_answer(request, slug=None):
 
     context = {
         'quiz': quiz,
-        'questions': questions
+        'questions': questions,
+        'user_attempted': user_attempted
     }
+    print(user_attempted)
     return render(request, template_name, context)
 
-# def quiz_detail(request, slug=None):
-#     questions = []          #Tạo list chứa các câu hỏi để gởi xuống html
-#     template_name = 'quiz/quiz-detail.html'
-#     quiz = get_object_or_404(Quiz, slug=slug)  # Lấy cuộc thi được chọn
-#     que = Question.objects.filter(quiz_id=quiz.id)         # Chọn những câu hỏi trong kì thi
-#     for q in que:
-#         ans = Answer.objects.filter(question_id=q.id)  # Chọn bộ những câu trả lời thuộc câu hỏi
-#         question = {
-#             'label': q.label,
-#             'aidi': q.id,
-#             'answer': ans
-#         }
-#         questions.append(question)
-#     context = {
-#         'quiz': quiz,
-#         'questions': questions
-#     }
-#     return render(request, template_name, context)
+@login_required
+def transcript_show(request):
+    template_name = 'quiz/transcript.html'
+    take_trans = Transcript.objects.filter(user=request.user)
+    post = {
+        'obj': take_trans
+    }
+    return render(request, template_name, post)
 
-# def quiz_detail(request, slug=None):
-#     template_name = 'quiz/quiz-detail.html'
-#     quiz = get_object_or_404(Quiz, slug=slug)
-#     q = quiz.questions.all()
-#     form_list = QuestionForm(instance=q)
-#     context = {
-#         'quiz': quiz,
-#         'form_list': form_list,
-#     }
-#     return render(request, template_name, context)
+@login_required
+def del_transcript(request, id=None):
+    trans = get_object_or_404(Transcript, id=id)
+    trans.delete()
+    return redirect('transcript')
+# ---------------------------------------------------------------------------
+def transcript_detail(request, slug=None):
+    questions = []
+    template_name = 'quiz/transcript-detail.html'
+    quiz = get_object_or_404(Quiz, slug=slug, publish=True)
+    que = Question.objects.filter(quiz_id=quiz.id)
+    take_trans = get_object_or_404(Transcript, user=request.user, quiz_item=quiz)
 
+    for q in que:
+        ans = Answer.objects.filter(question_id=q.id)
+        question = {
+            'label': q.label,
+            'aidi': q.id,
+            'answer': ans
+        }
+        questions.append(question)
 
-# # List View Index
-# class QuizListView(ListView):
-#     model = Post
-#     # <app>/<model>_<viewtype>.html
-#     template_name = 'pages/quiz.html'
-#     context_object_name = 'doc'
-#     paginate_by = 2
+    post = {
+        'obj': take_trans,
+        'quiz': quiz,
+        'questions': questions,
+    }
+    return render(request, template_name, post)
 
-# # class QuizDetailView(DetailView):
-# #     model = Post
-# #     template_name = 'pages/quiz-detail.html'
+def catago_quiz(request, slug=None):
+    template_name = 'quiz/catagories-detail.html'
+    catago = get_object_or_404(CategoryQuiz, slug=slug)
+    list_quiz = catago.quizs.filter(publish=True).annotate(question_count=Count('questions'))
+    content = {
+        'catago': catago,
+        'list_quiz': list_quiz,
+        'catania': CategoryQuiz.objects.all(),
+        'mosque': Quiz.objects.order_by('-create_at').filter(publish=True)[:5],
+    }
+    return render(request, template_name, content)
 
 # class QuizLikeRedirectView(RedirectView):
 #     def get_redirect_url(self, *args, **kwargs):
@@ -203,38 +232,3 @@ def see_answer(request, slug=None):
 #         }
 
 #         return Response(data)
-
-
-# # def quiz(request):
-# #     template_name = 'pages/quiz.html'
-# #     content = {
-# #         'doc':  Post.objects.all()#.order_by('-date_posted')
-# #     }
-# #     return render(request, template_name, content)
-
-# # class CataList(ListView):
-# #     model = Catagories
-# #     template_name = 'pages/widget.html'
-# #     context_object_name = 'catalo'
-
-
-# def quiz_detail(request, slug=None):
-#     template_name = 'pages/quiz-detail.html'
-#     post = {
-#         'quiz_post': get_object_or_404(Post, slug=slug),
-#         'cata': Catagories.objects.all().annotate(posts_count=Count('post'))
-#     }
-#     return render(request, template_name, post)
-
-
-# # def view_404(request, Exception):
-# #     content = {
-# #         'title': 'Page no found'
-# #     }
-# #     return render(request, 'pages/error.html', content)
-
-# # def view_500(request):
-# #     content = {
-# #         'title': 'Page no found'
-# #     }
-# #     return render(request, 'pages/error.html', content)

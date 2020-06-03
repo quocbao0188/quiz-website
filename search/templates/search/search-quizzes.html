@@ -1,0 +1,61 @@
+{% extends "base_blank.html" %}
+
+{% load static %}
+
+{% block title %}
+<title>Search</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'search:input-search' %}">Search</a></li>
+                    <li>{{ header }}</li>
+                </ul>
+                <h1>{{ header }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+
+{% if submitbutton == 'Search' and request.GET.q != '' %}
+
+{% if results %}
+<h1>Results for {{ request.GET.q }}</h1>
+
+{% for result in results %}
+<!-- post -->
+<div class="col-md-12">
+    <div class="post post-row">
+        <a class="post-img" href="{% url 'pre-quiz' result.slug %}"><img src="{{ result.image.url }}" alt=""></a>
+        <div class="post-body">
+            <div class="post-meta">
+                <a class="post-category cat-3" href="{% url 'catago-quiz' result.category_quiz.slug %}">{{ result.category_quiz }}</a>
+                <span class="post-date">{{ result.create_at|date:"F d, Y" }}</span>
+            </div>
+            <h3 class="post-title"><a href="{% url 'pre-quiz' result.slug %}">{{ result.title }}</a></h3>
+            <p><strong>Number of questions: </strong>{{ result.question_count }} | <strong>Time: </strong>{{ result.time }} minute</p>
+            <p>{{ result.description|truncatewords:20|safe }}</p>
+        </div>
+    </div>
+</div>
+<!-- /post -->
+{% endfor %}
+
+{% else %}
+<h1>No search results for this query</h1>
+{% endif %}
+{% else %}
+<h1>No search results for this query</h1>
+{% endif %}
+
+{% endblock body %}

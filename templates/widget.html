@@ -7,12 +7,27 @@
     <div class="category-widget">
         <ul>
             {% for item in cata %}
-            <li><a href="{% url 'catago-list' item.slug %}" class="cat-{{ forloop.counter }}">{{ item.title }}<span>{{ item.docs_count }}</span></a></li>
+            <li><a href="{% url 'catago-list' item.slug %}" class="cat-5">{{ item.title }}</a></li>
             {% endfor %}
         </ul>
     </div>
 </div>
 <!-- /catagories -->
+{% elif catania %}
+<!-- catagories  -->
+<div class="aside-widget">
+    <div class="section-title">
+        <h2>Catagories</h2>
+    </div>
+    <div class="category-widget">
+        <ul>
+            {% for item in catania %}
+            <li><a href="{% url 'catago-quiz' item.slug %}" class="cat-5">{{ item.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<!-- /catagories  -->
 {% else %}
 <!-- catagories  -->
 <!-- <div class="aside-widget">
@@ -34,7 +49,25 @@
     <div class="post post-widget">
         <a class="post-img" href="{% url 'doc-detail' mosts.slug %}"><img src="{{ mosts.image.url }}" alt=""></a>
         <div class="post-body">
-            <h3 class="post-title"><a href="#">{{mosts.title}}</a></h3>
+            <h3 class="post-title"><a href="{% url 'doc-detail' mosts.slug %}">{{mosts.title}}</a></h3>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+<!-- /post widget -->
+{% elif mosque %}
+<!-- post widget -->
+<div class="aside-widget">
+    <div class="section-title">
+        <h2>New Item</h2>
+    </div>
+
+    {% for mosts in mosque %}
+    <div class="post post-widget">
+        <a class="post-img" href="{% url 'pre-quiz' mosts.slug %}"><img src="{{ mosts.image.url }}" alt=""></a>
+        <div class="post-body">
+            <h3 class="post-title"><a href="{% url 'pre-quiz' mosts.slug %}">{{mosts.title}}</a></h3>
         </div>
     </div>
     {% endfor %}

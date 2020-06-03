@@ -1,0 +1,128 @@
+{% extends "base_blank.html" %}
+{% load static %}
+
+{% block title %}
+<title>{{ quiz.title }}</title>
+{% endblock title %}
+
+{% block page_header %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="page-header-breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'quiz' %}">Quiz</a></li>
+                    <li>{{ quiz.title }}</li>
+                </ul>
+                <h1>{{ quiz.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+
+<!-- Page Header -->
+<div id="post-header" class="page-header">
+    <div class="background-img" style="background-image: url({{quiz.image.url}});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="post-meta">
+                    <a class="post-category cat-2" href="">{{ quiz.category_quiz }}</a>
+                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                </div>
+                <h1>{{ quiz.title }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+{% endblock page_header %}
+
+{% block body %}
+<!-- post -->
+<div class="col-md-12">
+    <div class="row">
+        <div style="text-align: center;">
+            <h1>FINISHED QUIZ</h1>
+        </div>
+        <div>
+            <div>
+                <h2>Quiz name: {{ quiz.title }}</h2>
+                <h2>Student name: {{ user.username }}</h2>
+                <h2>Progress: <strong class="brown-text">{{ obj.answer_correct }}/{{ obj.question_number }}</strong></h2>
+                <h2>Correct answers: <strong class="brown-text">{{ obj.answer_correct }}</strong></h2>
+                <h2>Wrong answers: <strong class="brown-text">{{ obj.wrong_answer }}</strong></h2>
+                <h2>Unanswered: <strong class="brown-text">{{ obj.unanswered }}</strong></h2>
+            </div>
+        </div>
+        <div>
+            <div style="height: 100%;text-align: center;border: 2px solid #f69c55;padding:10px;">
+                <h2>Scores</h2>
+                <h2><span class="brown-text" style="font-size: 2em;">{{ obj.total_score|floatformat }}</span></h2>
+                {% if obj.total_score < 4.0 %}
+                <h2>Rank: <strong style="color:brown;">Poor</strong></h2>
+                {% elif obj.total_score == 4.0 or obj.total_score <= 4.9 %}
+                <h2>Rank: <strong style="color:gray;">Weak</strong></h2>
+                {% elif obj.total_score == 5.0 or obj.total_score <= 5.9 %}
+                <h2>Rank: <strong style="color:darkgoldenrod;">Ordinary</strong></h2>
+                {% elif obj.total_score == 6.0 or obj.total_score <= 6.9 %}
+                <h2>Rank: <strong style="color:green;">Average Good</strong></h2>
+                {% elif obj.total_score == 7.0 or obj.total_score <= 7.9 %}
+                <h2>Rank: <strong style="color:purple;">Good</strong></h2>
+                {% elif obj.total_score == 8.0 or obj.total_score <= 8.9 %}
+                <h2>Rank: <strong style="color:gold;">Very Good</strong></h2>
+                {% else %}
+                <h2>Rank: <strong style="color:deeppink;">Excellent</strong></h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 25px;text-align: center;">
+        <button id="printButton" class="btn btn-success btn-lg" onclick="printDiv('printArea')"><i class="fas fa-print"></i>
+            Print
+            results</button>
+    </div>
+    <div class="row" id="printArea">
+        {% for q in questions %}
+        <div class="answer-box">
+            <h1 class="brown-text">Question {{ forloop.counter }}:</h1>
+            <p>{{ q.label|safe }}</p>
+            <hr>
+            {% for a in q.answer %}
+            <div class="form-group">
+                {% if a.is_correct is True %}
+                <p class="correct-answer"><i class="fas fa-check"></i><strong> {{ a.text }}</strong></p>
+                {% else %}
+                <p class="answer">{{ a.text }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="text-center">
+    <button id="printButton" class="btn btn-success btn-lg" onclick="printDiv('printArea')"><i class="fas fa-print"></i>
+        Print
+        results</button>
+</div>
+<!-- /post -->
+{% endblock body %}
+
+{% block jquery %}
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+</script>
+{% endblock jquery %}

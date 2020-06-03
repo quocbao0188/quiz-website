@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from PIL import Image
+from django.utils import timezone
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 
 class CategoryQuiz(models.Model):
     title = models.CharField(max_length=100)
@@ -18,12 +20,14 @@ class CategoryQuiz(models.Model):
 
 class Quiz(models.Model):
     title = models.CharField(max_length=1000)
-    slug = models.SlugField(unique=True, verbose_name="Clean URL", help_text='A URL slug is the part of a URL or link that comes after the domain extension')
+    slug = models.SlugField(unique=True, verbose_name="Clean URL")
+    publish = models.BooleanField(blank=True, default=False, verbose_name="Publish",help_text="If yes, the quiz is displayed in the quiz list")
     category_quiz = models.ForeignKey(CategoryQuiz, on_delete=models.CASCADE, verbose_name='Category', related_name='quizs')
-    description = models.CharField(max_length=70)
-    time = models.PositiveSmallIntegerField(verbose_name='Time for quiz', help_text='Planning your time for a quiz', default=10)
-    image = models.ImageField(null=True)
-    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    description = models.TextField(verbose_name = "Description")
+    time = models.PositiveSmallIntegerField(verbose_name='Timer for quiz', help_text='Planning your time for a quiz. Minute units', default=10)
+    image = models.ImageField(default='hushare-default.png', null=True)
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     class Meta:
         verbose_name = 'Quiz'
@@ -42,18 +46,16 @@ class Quiz(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+@receiver(pre_save, sender=Quiz)
+def slugify_title(sender, instance, *args, **kwargs):
+    instance.slug = slugify(instance.title)
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
-    label = models.CharField(max_length=1000)
+    label = models.TextField()
 
     def __str__(self):
         return self.label
-
-    # def get_answers_list(self):
-    #     return [(answer.id, answer.text) for answer in Answer.objects.filter(question=self)]
-
-
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
@@ -63,26 +65,17 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
-    
-
-
-
-class QuizProfile(models.Model):
+class Transcript(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    total_score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    quiz_item = models.ForeignKey(Quiz, on_delete=models.CASCADE, verbose_name = "Quiz items")
+    total_score = models.FloatField(default=0, verbose_name = "Total score")
+    answer_correct = models.PositiveSmallIntegerField(default=0, verbose_name='Total number of correct answers')
+    unanswered = models.PositiveSmallIntegerField(default=0, verbose_name='Unanswered')
+    wrong_answer = models.PositiveSmallIntegerField(default=0, verbose_name='Wrong Answers')
+    question_number = models.PositiveSmallIntegerField(default=0, verbose_name='Total questions')
+    create_at = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.username} {self.quiz_item.title} test score'
 
-
-class AttemptedQuestion(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    quiz_profile = models.ForeignKey(QuizProfile, on_delete=models.CASCADE, related_name='attempts')
-    selected_answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True)
-    is_correct = models.BooleanField(default=False, null=False)
-    marks_obtained = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-
-
-@receiver(pre_save, sender=Quiz)
-def slugify_title(sender, instance, *args, **kwargs):
-    instance.slug = slugify(instance.title)

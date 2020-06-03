@@ -30,8 +30,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="post-meta">
-                    <a class="post-category cat-2" href="#">{{ quiz.category_quiz }}</a>
-                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                    <a class="post-category cat-3" href="{% url 'catago-quiz' quiz.category_quiz.slug %}">{{ quiz.category_quiz }}</a>
                 </div>
                 <h1>{{ quiz.title }}</h1>
             </div>
@@ -42,31 +41,58 @@
 {% endblock page_header %}
 
 {% block body %}
-<!-- post -->
-<figure class="figure-img">
-    <img class="img-responsive" src="{{ quiz.image.url }}" alt="">
-    <figcaption>{{ quiz.created|date:"F d, Y" }}</figcaption>
-</figure>
-<h2>Number of questions: <strong style="color: brown;">{{ question_count }}</strong></h2>
-<h2>Time: <strong style="color: brown;">{{ quiz.time }} minutes</strong></h2>
+<div class="col-md-8">
+    <!-- post -->
+    <figure class="figure-img">
+        <img class="img-responsive" src="{{ quiz.image.url }}" alt="">
+        <figcaption>{{ quiz.create_at }}</figcaption>
+    </figure>
+    <h2>Number of questions: <strong style="color: brown;">{{ question_count }}</strong></h2>
+    <h2>Time: <strong style="color: brown;">{{ quiz.time }} minutes</strong></h2>
 
-<!-- share -->
-<div class="fb-like" data-href="http://127.0.0.1:8000/pre-quiz/{{ quiz.slug }}/" data-width="" data-layout="standard" data-action="like" data-size="large" data-share="true"></div>
-<!-- /share -->
+    <!-- share -->
+    <div class="fb-like" data-href="http://127.0.0.1:8000/pre-quiz/{{ quiz.slug }}/" data-width=""
+        data-layout="standard" data-action="like" data-size="large" data-share="true"></div>
+    <!-- /share -->
 
-<p>{{ quiz.description|safe|linebreaks }}</p>
-<div class="form-group">
-    <div class="text-center">
-        <a class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}">Start</a>
+    <p>{{ quiz.description|safe|linebreaks }}</p>
+
+    <div class="form-group">
+        <div class="text-center">
+            {% if user.is_authenticated %}
+            {% if user.profile.image.url != '' %}
+            <a id="startButton" class="btn btn-success btn-lg" href="{% url 'quiz-detail' quiz.slug %}"><i class="fas fa-play"></i> Start Now</a>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                You need to finish your <a href="{% url 'profile' %}" class="alert-link">profile</a> to take an exam.
+            </div>
+            {% endif %}
+            {% else %}
+            <h4>You have to login to download</h4>
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login Now</a>
+            {% endif %}
+        </div>
     </div>
+    <!-- /post -->
+
+    <!-- comment -->
+    <div class="fb-comments" data-href="http://127.0.0.1:8000/pre-quiz/{{ quiz.slug }}/" data-order-by="reverse_time"
+        data-numposts="5" data-width="100%"></div>
+    <!-- /comment -->
 </div>
-
-
-
-<!-- /post -->
-
-<!-- comment -->
-<div class="fb-comments" data-href="http://127.0.0.1:8000/pre-quiz/{{ quiz.slug }}/" data-order-by="reverse_time" data-numposts="5" data-width="100%" ></div>
-<!-- /comment -->
-
 {% endblock body %}
+
+{% block jquery %}
+<script>
+    $(document).ready(function(){
+        $("#startButton").click(function(){
+            if(confirm('Do you want to start quiz now ?')){
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock jquery %}

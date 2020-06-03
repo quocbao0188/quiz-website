@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-<title>{{ quiz.name }}</title>
+<title>{{ quiz.title }}</title>
 {% endblock title %}
 
 {% block page_header %}
@@ -30,8 +30,9 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="post-meta">
-                    <a class="post-category cat-2" href="">{{ quiz.category_quiz }}</a>
-                    <span class="post-date">{{ quiz.created|date:"F d, Y" }}</span>
+                    <a class="post-category cat-3"
+                        href="{% url 'catago-quiz' quiz.category_quiz.slug %}">{{ quiz.category_quiz }}</a>
+                    <span class="post-date">{{ quiz.create_at|date:"F d, Y" }}</span>
                 </div>
                 <h1>{{ quiz.title }}</h1>
             </div>
@@ -43,31 +44,40 @@
 
 {% block body %}
 <!-- post -->
-<div>
-        <h1>Submission time: <span style="color: red; font-weight: bold;" id="time"></span></h1>
+<div class="col-md-12">
+    <h1 class="text-center">Number of questions: <strong class="red-text">{{ quiz.questions.count }}</strong> |
+        Submission time: <span id="time"></span></h1>
     <div>
-        <form name="quiz" class="form" id="myquiz" action="" method="POST">
+        <form name="quiz" id="form-quiz" action="{% url 'quiz-detail' quiz.slug %}" method="POST">
             {% csrf_token %}
             {% for q in questions %}
-            <legend style="color: brown;"><strong>{{ forloop.counter }}: {{ q.label }}</strong></legend>
-            <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
-            {% for a in q.answer %}
-            <div class="form-group">
-                <input class="form-check-input" type="radio" name="choise-{{ q.aidi }}" id="{{ a.pk }}"
-                    value="{{ a.pk }}">
-                <label class="form-check-label" for="{{ a.pk }}">{{ a.text }}</label>
+            <div class="answer-box">
+                <h1 class="brown-text">Question {{ forloop.counter }}:</h1>
+                <p>{{ q.label|safe }}</p>
+                <input type="hidden" name="question-{{ q.aidi }}" value="{{ q.aidi }}">
+                {% for a in q.answer %}
+                <div class="form-group">
+                    <input class="form-check-input" type="radio" name="choice-{{ q.aidi }}" id="{{ a.pk }}"
+                        value="{{ a.pk }}">
+                    <label class="form-check-label" for="{{ a.pk }}">{{ a.text }}</label>
+                </div>
+                {% endfor %}
             </div>
             {% endfor %}
-            {% endfor %}
             <div class="form-group">
-                <div class="text-center">
-                    <button class="btn btn-success btn-lg" type="submit">Submit</button>
+                <hr>
+                <div class="text-right">
+                    <a id="cancelQuiz" href="{% url 'pre-quiz' quiz.slug %}" class="btn btn-danger btn-lg"><i class="fas fa-times-circle"></i> Cancel</a>
+                    <button id="submitQuiz" class="btn btn-success btn-lg" type="submit"><i class="fas fa-check-circle"></i> Submit</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+<!-- /post -->
+{% endblock body %}
 
+{% block jquery %}
 <script>
     function startTimer(duration, display) {
         var start = Date.now(),
@@ -75,11 +85,7 @@
             minutes,
             seconds;
         function timer() {
-            // get the number of seconds that have elapsed since 
-            // startTimer() was called
             diff = duration - (((Date.now() - start) / 1000) | 0);
-
-            // does the same job as parseInt truncates the float
             minutes = (diff / 60) | 0;
             seconds = (diff % 60) | 0;
 
@@ -89,21 +95,41 @@
             display.textContent = minutes + ":" + seconds;
 
             if (diff <= 0) {
-                // add one second so that the count down starts at the full duration
-                // example 05:00 not 04:59
                 start = Date.now() + 1000;
             }
         };
-        // we don't want to wait a full second before the timer starts
         timer();
         setInterval(timer, 1000);
     }
     window.onload = function () {
-        var time = 60 * {{ quiz.time }},
-            display = document.querySelector('#time');
+        var number = '{{ quiz.time }}',
+        time = 60 * number,
+        display = document.querySelector('#time');
         startTimer(time, display);
-        setTimeout(function(){ document.quiz.submit(); }, time*1000);
+        setTimeout(function () { document.quiz.submit(); }, time * 1000);
     };
 </script>
-<!-- /post -->
-{% endblock body %}
+
+<script>
+    $(document).ready(function () {
+
+        $("#submitQuiz").click(function () {
+            if (confirm('Are you really want to submit quiz ?')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+
+        $("#cancelQuiz").click(function () {
+            if (confirm('Do you want to cancel the test? All results will not be saved.')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock jquery %}

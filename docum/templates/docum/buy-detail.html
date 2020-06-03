@@ -31,19 +31,23 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">Catagory</th>
+                <th scope="col">Credit</th>
+                <th scope="col">Category</th>
                 <th scope="col">Species</th>
+                <th scope="col">Create Date</th>
                 <th scope="col">Download</th>
               </tr>
             </thead>
             <tbody>
-            {% for q in obj.items.all %}
+            {% for q in obj %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ q.title }}</td>
-                    <td>{{ q.catago.title  }}</td>
-                    <td>{{ q.get_species_display }}</td>
-                    <td><a class="btn btn-primary" href="{{ q.link_url }}" target="_blank">Download</a></td>
+                    <td><a href="{% url 'doc-detail' q.items.slug %}"><strong>{{ q.items.title }}</strong></a></td>
+                    <td>{{ q.items.credit }} Coin</td>
+                    <td>{{ q.items.catago.title  }}</td>
+                    <td>{{ q.items.get_species_display }}</td>
+                    <td>{{ q.create_at }}</td>
+                    <td><a class="btn btn-primary" href="{{ q.items.link_url }}" target="_blank"><i class="fas fa-file-download"></i></a></td>
                 </tr>
             {% endfor %}
             </tbody>

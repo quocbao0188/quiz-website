@@ -5,7 +5,9 @@ from decimal import Decimal
 from PIL import Image
 from django.urls import reverse
 from django.utils.text import slugify
-# Create your models here.
+from django.dispatch import receiver
+from django.db.models.signals import post_save, pre_save
+
 class Category(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, verbose_name = "Clean URL")
@@ -39,22 +41,20 @@ class Document(models.Model):
     catago = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='documents', verbose_name = "Category")
     content = models.TextField(verbose_name = "Description")
     link_url = models.URLField(max_length=255, unique=True, verbose_name = "Direct link")
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(null=True)
-    like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
-    date_posted = models.DateTimeField(default=timezone.now, verbose_name = "Date Created")
+    backup_link = models.URLField(max_length=255, null=True, blank=True, unique=True, verbose_name = "Backup link")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    image = models.ImageField(default='hushare-default.png', null=True)
+    # like = models.ManyToManyField(User, blank=True, related_name='docs_likes')
     credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
+    publish = models.BooleanField(blank=True, default=False, verbose_name="Publish",help_text="If yes, the material is displayed in the material list")
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     
-
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('doc-detail', kwargs={'slug': self.slug})
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title) # set the slug explicitly
-        super(Document, self).save(*args, **kwargs) # call Django's save()
     
     # def get_absolute_url(self):
     #     return reverse("quiz-detail", kwargs={"slug": self.slug})
@@ -65,9 +65,7 @@ class Document(models.Model):
     # def get_api_like_url(self):
     #     return reverse("quiz-api-like", kwargs={"slug": self.slug})
 
-    # Ghi đè hàm save() đẻ chỉnh kích thước ảnh xuống 300px x 200px
     def save(self, **kwargs):
-        # Ghi đè phương thức save()
         super().save()
         img = Image.open(self.image.path)
         if img.height > 750 or img.width > 450:
@@ -77,8 +75,18 @@ class Document(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(Document, blank=True, verbose_name = "Items")
-    order_date = models.DateTimeField(auto_now_add=True)
+    items = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name = "Items")
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
         return self.user.username
+
+class Comment(models.Model):
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    body = models.TextField(verbose_name = "Comment content")
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+@receiver(pre_save, sender=Document)
+def slugify_title(sender, instance, *args, **kwargs):
+    instance.slug = slugify(instance.title)

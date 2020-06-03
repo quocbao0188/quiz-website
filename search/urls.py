@@ -1,7 +1,9 @@
 from django.conf.urls import url
 from django.contrib  import admin
-from .views import search_docs
+from django.urls import path
+from search import views
 
 urlpatterns = [
-    url(r'^$', search_docs, name='search-docs'),
+    path('input-search/', views.search, name='input-search'),
+    url(r'^$', views.search_docs, name='search-docs'),
 ]

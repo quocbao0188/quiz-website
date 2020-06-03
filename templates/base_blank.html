@@ -10,7 +10,7 @@
 
 	<!--Title for pages-->
 	{% block title %}
-	
+
 	{% endblock title %}
 
 	<!--CSS-->
@@ -28,20 +28,19 @@
 				<div class="container">
 					<!-- logo -->
 					<div class="nav-logo">
-						<a href="/" class="logo"><img src="{% static 'img/logo.png' %}" alt=""></a>
+						<a href="{% url 'home' %}" class="logo"><img src="{% static 'img/logo.png' %}" alt=""></a>
 					</div>
 					<!-- /logo -->
 
 					<!-- nav -->
 					{% include 'navbar.html' %}
-					{% include 'navbar-account.html' %}
 					<!-- /nav -->
 
 					<!-- search & aside toggle -->
 					<div class="nav-btns">
+						{% include 'navbar-account.html' %}
 						<button class="aside-btn"><i class="fa fa-bars"></i></button>
-						<button class="search-btn"><i class="fa fa-search"></i></button>
-						{% include 'search-bar.html' %}
+						<a class="search-btn" href="{% url 'search:input-search' %}"><i class="fa fa-search"></i></a>
 					</div>
 					<!-- /search & aside toggle -->
 				</div>
@@ -53,7 +52,6 @@
 			<!-- Aside Nav -->
 		</div>
 		<!-- /Nav -->
-
 		{% block page_header %}
 
 		{% endblock page_header %}
@@ -66,21 +64,18 @@
 		<div class="container">
 			<!-- row -->
 			<div class="row">
-				<div class="col-md-8">
-					<!-- Hiện messages thông báo -->
-					{% if messages %}
-						{% for message in messages %}
-						<div class='alert alert-{{ message.tags }}'>
-							{{ message }}
-						</div>
-						{% endfor %}
-					{% endif %}
-
-					{% block body %}
-
-					{% endblock body %}
-
+				{% if messages %}
+				{% for message in messages %}
+				<div class='alert alert-{{ message.tags }}'>
+					{{ message }}
 				</div>
+				{% endfor %}
+				{% endif %}
+				<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-angle-double-up fa-lg"></i></button>
+				{% block body %}
+
+				{% endblock body %}
+
 				<!-- aside -->
 				<div class="col-md-4">
 					{% include 'widget.html' %}
@@ -99,9 +94,12 @@
 	</footer>
 	<!-- /Footer -->
 
-	<!-- jQuery Plugins -->
+	<!-- JavaScript Plugins -->
 	{% include 'js-import.html' %}
-
+	
+	{% block jquery %}
+		
+	{% endblock jquery %}
+		
 </body>
-
 </html>

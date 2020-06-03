@@ -25,9 +25,10 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^_nested_admin/', include('nested_admin.urls')),
+    path('tinymce/', include('tinymce.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     path('', include('home.urls')),
     path('', include('quiz.urls')),
-    path('', include('gpa.urls')),
     path('', include('docum.urls')),
     url(r'^search/', include(('search.urls', 'search'), namespace='search')),
     path('register/', user_views.register, name='register'),
@@ -40,8 +41,8 @@ urlpatterns = [
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'), name='password_reset_complete'),
 ]
 
-#Kiểm tra DEBUG == TRUE hay không vì trong chế độ DEBUG mới cần mapping MEDIA_URL và MEDIA_ROOT lại với nhau
-#Còn khi deploy lên server, thì web server sẽ chịu trách nhiệm các đường dẫn file ảnh, Django không cần thực hiện cái mapping này
+# Check DEBUG == TRUE or not because in DEBUG mode it is necessary to map MEDIA_URL and MEDIA_ROOT together
+# When deploying on the server, the web server will be responsible for the image file path, Django does not need to perform this mapping
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
