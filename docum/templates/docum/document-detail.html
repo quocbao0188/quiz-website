@@ -96,11 +96,15 @@
     </div>
     {% else %}
     {% if doc.credit >= 1 %}
-    <a id="buyNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }}
-        Coin</a>
+    <div class="text-center">
+        <a id="buyNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}">Buy Now: {{ doc.credit }}
+            Coin</a>
+    </div>
     {% else %}
-    <a id="downNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}"><i
+    <div class="text-center">
+        <a id="downNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}"><i
             class="fas fa-download"></i> Download for free</a>
+    </div>
     {% endif %}
     {% endif %}
     {% else %}
@@ -109,9 +113,11 @@
     </div>
     {% endif %}
     {% else %}
-    <h4>You have to login to download</h4>
-    <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login
+    <div class="text-center">
+        <h4>You have to login to download</h4>
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login
         Now</a>
+    </div>
     {% endif %}
 
     <!-- /post -->

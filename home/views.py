@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from docum.models import Document
+from quiz.models import Quiz
+from django.db.models import Count
 # from django.views.generic import ListView
 # Create your views here.
 
 def index(request):
     template_name = 'home/index.html'
     content = {
-        'doc':  Document.objects.all()
+        'doc':  Document.objects.filter(publish=True)[:6],
+        'quiz': Quiz.objects.filter(publish=True).annotate(question_count=Count('questions'))[:6]
     }
     return render(request, template_name, content)
 
