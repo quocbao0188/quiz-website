@@ -22,6 +22,7 @@ class Quiz(models.Model):
     title = models.CharField(max_length=1000)
     slug = models.SlugField(unique=True, verbose_name="Clean URL")
     publish = models.BooleanField(blank=True, default=False, verbose_name="Publish",help_text="If yes, the quiz is displayed in the quiz list")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     category_quiz = models.ForeignKey(CategoryQuiz, on_delete=models.CASCADE, verbose_name='Category', related_name='quizs')
     description = models.TextField(verbose_name = "Description")
     time = models.PositiveSmallIntegerField(verbose_name='Timer for quiz', help_text='Planning your time for a quiz. Minute units', default=10)

@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import CommentForm
 from django.http import HttpResponseRedirect
-# import csv
+import csv
 
 # List Document
 def document_list(request):
@@ -88,7 +88,7 @@ def delete_comment(request, id=None):
     if comment.user == request.user:
         comment.delete()
         messages.success(request, "Successfully Deleted")
-        return redirect('doc-detail')
+        return redirect('doc-detail', slug=comment.document.slug)
         # return HttpResponseRedirect(request.path_info)
 
 @login_required
@@ -150,13 +150,13 @@ def buy_detail(request):
     return render(request, template_name, post)
 
 
-# def export_csv(request):
-#     response = HttpResponse(content_type='text/csv')
-#     response['Content-Disposition'] = 'attachment; filename="document.csv"'
-#     writer = csv.writer(response)
-#     writer.writerow(['Title', 'Slug'])
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="document.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Title', 'Slug'])
 
-#     for docs in Document.objects.all().values_list('title', 'slug', 'species', 'catago', 'content', 'link_url', 'author', 'image', 'date_posted', 'credit'):
-#         writer.writerow(docs)
+    for docs in Document.objects.all().values_list('title', 'slug', 'species', 'catago', 'content', 'link_url', 'author', 'image', 'create_at', 'credit'):
+        writer.writerow(docs)
 
-#     return response
+    return response

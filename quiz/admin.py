@@ -116,7 +116,7 @@ class QuestionInline(nested_admin.NestedTabularInline):
 
 class QuizAdmin(nested_admin.NestedModelAdmin):
     inlines = [QuestionInline,]
-    list_display = ['title', 'slug', 'category_quiz', 'time', 'create_at', 'updated_at', 'publish']
+    list_display = ['title', 'author', 'slug', 'category_quiz', 'time', 'create_at', 'updated_at', 'publish']
     search_fields = ['title']
     date_hierarchy = 'create_at'
     actions = ['make_published', 'make_draft']
@@ -138,6 +138,11 @@ class QuizAdmin(nested_admin.NestedModelAdmin):
     def make_draft(self, request, queryset):
         queryset.update(publish=False)
     make_draft.short_description = "Mark selected quizzes as draft"
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'author', None) is None:
+            obj.author = request.user
+        obj.save()
 
 class TranscriptAdmin(admin.ModelAdmin):
     list_display = ['user', 'quiz_item', 'total_score', 'create_at', 'updated_at']

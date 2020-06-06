@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^catagories/(?P<slug>[\w-]+)/$', views.catago_list, name='catago-list'),
     path('buy-detail/', views.buy_detail, name='buy-detail'),
     path('comment/<int:id>/delete', views.delete_comment, name='delete-comment'),
-    # path('export/', views.export_csv, name='export'),
+    path('export/', views.export_csv, name='export'),
 ]
 
     
