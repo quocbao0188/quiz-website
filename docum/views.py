@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Document, Category, Order, Comment
-from users.models import Profile
+from users.models import Profile, Wallet
 from django.contrib import messages
 from django.http import HttpResponse
 from django.views.generic import RedirectView, ListView
@@ -13,8 +13,9 @@ from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import CommentForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 import csv
+
 
 # List Document
 def document_list(request):
@@ -68,7 +69,7 @@ def document_detail(request, slug=None):
         order_obj = None
 
     form = CommentForm()
-    if request.method == 'POST':
+    if request.is_ajax and request.method == 'POST':
         form = CommentForm(request.POST, user=request.user, document=doz)
         if form.is_valid():
             form.save()
@@ -83,12 +84,38 @@ def document_detail(request, slug=None):
     }
     return render(request, template_name, post)
 
-def delete_comment(request, id=None):
-    comment = get_object_or_404(Comment, id=id)
+def create_comment(request):
+    content = request.GET.get('content')
+    document_id = request.GET.get('doc_id')
+
+    print(content)
+    print(document_id)
+    Comment.objects.create(user=request.user, document_id=document_id, body=content)
+    data ={
+        'content': content,
+        'username': request.user.username,
+
+    }
+    return JsonResponse(data)
+
+
+def delete_comment(request):
+    # comment = get_object_or_404(Comment, id=id)
+    # if comment.user == request.user:
+    #     comment.delete()
+    #     messages.success(request, "Successfully Deleted")
+    #     # return redirect('doc-detail', slug=comment.document.slug)
+    
+    comment_id = request.GET.get('comment_id')
+    print(comment_id)
+    comment = get_object_or_404(Comment, id=comment_id)
     if comment.user == request.user:
         comment.delete()
         messages.success(request, "Successfully Deleted")
-        return redirect('doc-detail', slug=comment.document.slug)
+    data = {
+        
+    }
+    return JsonResponse(data)
         # return HttpResponseRedirect(request.path_info)
 
 @login_required
@@ -96,13 +123,13 @@ def buy_item(request, slug=None):
     item = get_object_or_404(Document, slug=slug)
     order_qs = Order.objects.filter(user=request.user, items_id=item.id)
     if Profile.objects.filter(user=request.user).exists():
-        user_now = Profile.objects.get(user=request.user)
+        wallet_now = Wallet.objects.get(profile_wallet=request.user.profile.id)
         if not order_qs.exists():
-            if user_now.credit >= item.credit:
+            if wallet_now.credit >= item.credit:
                 Order.objects.create(user=request.user, items_id=item.id)
-                user_now.credit = user_now.credit - item.credit
-                print(user_now.credit)
-                user_now.save()
+                wallet_now.credit = wallet_now.credit - item.credit
+                print(wallet_now.credit)
+                wallet_now.save()
                 messages.success(request, f'You have successfully purchased')
             else:
                 messages.warning(request, f'You do not have enough money to buy documents')

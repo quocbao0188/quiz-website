@@ -29,7 +29,7 @@ class Profile(models.Model):
     image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default=OTHER)
     acc_type = models.CharField(max_length=4, choices=PREMIUM_STATUS, default=FREE, verbose_name = "Account type")
-    credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
+    # credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
     phone = PhoneNumberField(verbose_name = "Phone number", null=True, blank=True, unique=True)
     student_id = models.BigIntegerField(unique=True)
     faculty = models.CharField(max_length=50)
@@ -46,3 +46,12 @@ class Profile(models.Model):
             output_size = (200, 200)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+class Wallet(models.Model):
+    profile_wallet = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    credit = models.DecimalField(max_digits=8, decimal_places=0, default=Decimal('0'))
+    create_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+    def __str__(self):
+        return f'{self.profile_wallet.user.username} Wallet'

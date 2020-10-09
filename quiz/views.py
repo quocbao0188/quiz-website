@@ -75,9 +75,12 @@ def quiz_detail(request, slug=None):
 
             # Type conversion from string to Int and put it into list
             results = list(map(int, attempted_list))
+            print(results)
             user_attempted = results
             # Compare
             same_values = set(list_answer) & set(results)
+            print(list_answer)
+            print(same_values)
             total_correct = len(same_values)
             point = total_correct/questions_count
             total_not_done = len(not_done)

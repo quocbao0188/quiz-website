@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'nested_admin',
+    'import_export',
     'tinymce',
     'allauth',
     'allauth.account',
@@ -95,11 +96,11 @@ WSGI_APPLICATION = 'firstproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hushare',
+        'NAME': 'hutest',
         'USER': 'root',
         'PASSWORD': '0188',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PORT': '3307',
         'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
     },
     # 'postgresql': {
@@ -140,8 +141,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 ACCOUNT_AUTHENTICATION_METHOD ='username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 
 # Internationalization

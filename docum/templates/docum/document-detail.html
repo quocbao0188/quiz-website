@@ -68,7 +68,8 @@
     {% if ord.exists and ord != None %}
     <!-- Button trigger modal -->
     <div class="text-center">
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Download</button>
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+            data-target="#myModal">Download</button>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -79,14 +80,16 @@
                 </div>
                 <div class="modal-body">
                     <h3>Main download link</h3>
-                    <p>This is a link <a style="color: blue;" href="{{ doc.link_url }}" target="_blank">{{ doc.title }}</a></p>
-                    
+                    <p>This is a link <a style="color: blue;" href="{{ doc.link_url }}"
+                            target="_blank">{{ doc.title }}</a></p>
+
                     {% if doc.backup_link != None %}
                     <hr>
                     <h3>Backup link</h3>
-                    <p><a style="color: blue;" href="{{ doc.backup_link }}" class="tooltip-test" title="Tooltip">{{ doc.title }}</a> have tooltips on hover.</p>
+                    <p><a style="color: blue;" href="{{ doc.backup_link }}" class="tooltip-test"
+                            title="Tooltip">{{ doc.title }}</a> have tooltips on hover.</p>
                     {% endif %}
-                        
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -103,7 +106,7 @@
     {% else %}
     <div class="text-center">
         <a id="downNow" class="btn btn-success btn-lg" href="{% url 'buy-item' doc.slug %}"><i
-            class="fas fa-download"></i> Download for free</a>
+                class="fas fa-download"></i> Download for free</a>
     </div>
     {% endif %}
     {% endif %}
@@ -116,7 +119,7 @@
     <div class="text-center">
         <h4>You have to login to download</h4>
         <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login
-        Now</a>
+            Now</a>
     </div>
     {% endif %}
 
@@ -128,34 +131,40 @@
         <div class="section-title">
             <h2>{{doc.comments.count}} Comments</h2>
         </div>
-        {% for comment in doc.comments.all %}
-        <div class="post-comments">
-            <!-- comment -->
-            <div class="media">
-                <div class="media-body">
-                    <div class="media-heading">
-                        <h4>{{ comment.user }}</h4>
-                        <span class="time">{{ comment.create_at }}</span>
-                        {% if comment.user == user %}
-                        <a href="{% url 'delete-comment' id=comment.id %}" class="btn btn-danger btn-sm"><i
-                                class="fas fa-times"></i></a>
-                        {% endif %}
+        <div class="comment-container">
+            {% for comment in doc.comments.all %}
+            <div class="post-comments">
+                <!-- comment -->
+                <div class="media">
+                    <div class="media-body">
+                        <div class="media-heading">
+                            <h4>{{ comment.user }}</h4>
+                            <span class="time">{{ comment.create_at }}</span>
+                            {% if comment.user == user %}
+
+                            <a class="btn btn-danger btn-sm delete-btn" data-comment-id="{{ comment.id }}"><i
+                                    class="fas fa-times"></i></a>
+                            {% endif %}
+                        </div>
+                        <p>{{ comment.body|linebreaks|safe }}</p>
                     </div>
-                    <p>{{ comment.body|linebreaks|safe }}</p>
                 </div>
+                <!-- /comment -->
             </div>
-            <!-- /comment -->
+            {% empty %}
+            <h4>There is no comments</h4>
+            <br>
+            {% endfor %}
         </div>
-        {% empty %}
-        <h4>There is no comments</h4>
-        <br>
-        {% endfor %}
         {% if user.is_authenticated %}
-        <form action="{% url 'doc-detail' doc.slug %}" method="POST">
+        <!-- <form action="{% url 'doc-detail' doc.slug %}" method="POST">
             {% csrf_token %}
             {{ form|crispy }}
             <input class="btn btn-primary btn-lg" type="submit" value="Comment">
-        </form>
+        </form> -->
+        <input type="hidden" class="document-id" value="{{ doc.id }}">
+        <textarea class="form-control comment-input mb-3" id="" cols="30" rows="10"></textarea>
+        <input class="btn btn-primary btn-lg comment-submit" value="Comment">
         {% else %}
         <div class="row">
             <hr>
@@ -175,6 +184,25 @@
         </div>
     </div>
     <!-- /comment -->
+</div>
+<div class="modal fade delete-comment-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Comment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to delete your comment ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary delete-comment-confirm">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock body %}
 
@@ -197,6 +225,13 @@
             else {
                 return false;
             }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#id_body").change(function () {
+            console.log($(this).val());
         });
     });
 </script>

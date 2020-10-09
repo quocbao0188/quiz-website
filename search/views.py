@@ -68,7 +68,7 @@ def search_docs(request):
                 content = {
                     'results': results,
                     'submitbutton': submitbutton,
-                    'header': 'Document, Practice Labs and Other Search'
+                    'header': 'Document, Practice Labs Search'
                 }
                 return render(request, 'search/search-docs.html', content)
             else:
