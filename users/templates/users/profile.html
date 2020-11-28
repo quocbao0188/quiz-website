@@ -36,12 +36,12 @@
                     <div class="media-body">
                         <div class="media-heading">
                             {% if user.profile.image.url != '' %}
-                            {% if user.profile.credit >= 1000 %}
+                            {% if wallet.credit >= 1000 %}
                             <h3>{{ user.username }} - Premium Account</h3>
                             {% else %}
                             <h3>{{ user.username }} - Free Account</h3>
                             {% endif %}
-                            <p><strong>Hushare Coin: </strong>{{ user.profile.credit }} Coin</p>
+                            <p><strong>Hutest Coin: </strong><span style="color: red;">{{ wallet.credit }}</span> Coin</p>
                             <p><strong>Date Joined: </strong>{{ user.date_joined }}</p>
                             <p><strong>Last Login: </strong>{{ user.last_login }}</p>
                             {% else %}

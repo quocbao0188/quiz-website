@@ -3,6 +3,8 @@ import nested_admin
 from .models import Question, Quiz, Transcript, Answer, CategoryQuiz
 from tinymce.widgets import TinyMCE
 from django.db import models
+from import_export.admin import ImportExportModelAdmin
+from .resources import QuizResource
 
 admin.site.site_header = 'HUSHARE Administrator'
 
@@ -153,5 +155,7 @@ class CategoryQuizAdmin(admin.ModelAdmin):
     fields = ['title']
 
 admin.site.register(Quiz, QuizAdmin)
+admin.site.register(Question)
+admin.site.register(Answer)
 admin.site.register(CategoryQuiz, CategoryQuizAdmin)
 admin.site.register(Transcript, TranscriptAdmin)

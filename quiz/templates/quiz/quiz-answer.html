@@ -43,6 +43,11 @@
 
 {% block body %}
 <!-- post -->
+<div class="text-center">
+    <button id="printButton" class="btn btn-success btn-lg" onclick="printDiv('printArea')"><i class="fas fa-print"></i>
+        Print
+        results</button>
+</div>
 <div class="col-md-12" id="printArea">
     {% for q in questions %}
     <div class="answer-box">

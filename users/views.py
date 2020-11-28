@@ -4,7 +4,7 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, ProfileR
 from django.contrib.auth.decorators import login_required
 import requests
 from django.conf import settings
-from .models import Profile
+from .models import Profile, Wallet
 
 # def register(request):
 #     if request.method == 'POST':
@@ -92,6 +92,7 @@ def profile(request):
     
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        # 'wallet': Wallet.objects.get(profile_wallet=request.user.profile.id)
     }
     return render(request, 'users/profile.html', context)

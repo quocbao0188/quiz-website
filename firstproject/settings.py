@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'docum.apps.DocumConfig',
     'home.apps.HomeConfig',
     'search.apps.SearchConfig',
+    'rss.apps.RssConfig',
     'phonenumber_field',
     'rest_framework',
     'crispy_forms',
     'nested_admin',
+    'import_export',
     'tinymce',
     'allauth',
     'allauth.account',
@@ -95,21 +97,19 @@ WSGI_APPLICATION = 'firstproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hushare',
+        'NAME': 'hutest',
         'USER': 'root',
         'PASSWORD': '0188',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
+        'HOST': 'localhost',
+        'PORT': '3307',
+        # 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'hutest',
+        # 'USER': 'admin',
+        # 'PASSWORD': '0188',
+        # 'HOST': 'db',
+        # 'PORT': '5434',
     },
-    # 'postgresql': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'hushare',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '0188',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    # }
 }
 
 
@@ -140,8 +140,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 ACCOUNT_AUTHENTICATION_METHOD ='username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 
 # Internationalization
