@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: "hutest"
+      MYSQL_USER: "root"
+      MYSQL_ROOT_PASSWORD: "0188"
+      MYSQL_PASSWORD: "0188"
+    ports:
+      - "3306:3306"
+    # image: postgres
+    # environment:
+    #   POSTGRES_USER: "admin"
+    #   POSTGRES_PASSWORD: "0188"
+    #   POSTGRES_DB: "hutest"
+    # ports:
+    #   - "5434:5434"
+  web:
+    build: .
+    command: python manage.py runserver
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

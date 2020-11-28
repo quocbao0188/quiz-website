@@ -43,7 +43,7 @@ class CommentInLine(admin.TabularInline):
 #         obj.save()
 
 class CategoryAdmin(admin.ModelAdmin):
-    fields = ['title']
+    fields = ['title', 'slug']
 
 class DocAdmin(ImportExportModelAdmin):
     resource_class = DocumentResource
@@ -54,7 +54,7 @@ class DocAdmin(ImportExportModelAdmin):
     actions = ['make_published', 'make_draft']
 
     fieldsets = [
-        ("Title/Category", {'fields': ["title", "publish", "species", "catago"]}),
+        ("Title/Category", {'fields': ["title", "slug", "publish", "species", "catago"]}),
         ("Content/Image", {'fields': ["content", "image"]}),
         ("URL download", {'fields': ["link_url", "backup_link"]}),
         ("Price of material", {'fields': ["credit"]})

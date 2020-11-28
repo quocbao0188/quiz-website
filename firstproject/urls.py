@@ -24,6 +24,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('rss.urls')),
     url(r'^_nested_admin/', include('nested_admin.urls')),
     path('tinymce/', include('tinymce.urls')),
     url(r'^accounts/', include('allauth.urls')),

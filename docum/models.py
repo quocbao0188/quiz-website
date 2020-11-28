@@ -20,7 +20,8 @@ class Category(models.Model):
 	    verbose_name_plural = 'Categories'
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title) # set the slug explicitly
+        if self.slug is None:
+            self.slug = slugify(self.title) # set the slug explicitly
         super(Category, self).save(*args, **kwargs) # call Django's save()
 
 class Document(models.Model):
@@ -89,4 +90,5 @@ class Comment(models.Model):
 
 @receiver(pre_save, sender=Document)
 def slugify_title(sender, instance, *args, **kwargs):
-    instance.slug = slugify(instance.title)
+    if instance.slug is None:
+        instance.slug = slugify(instance.title)

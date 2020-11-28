@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'docum.apps.DocumConfig',
     'home.apps.HomeConfig',
     'search.apps.SearchConfig',
+    'rss.apps.RssConfig',
     'phonenumber_field',
     'rest_framework',
     'crispy_forms',
@@ -99,18 +100,16 @@ DATABASES = {
         'NAME': 'hutest',
         'USER': 'root',
         'PASSWORD': '0188',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '3307',
-        'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
+        # 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB' }
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'hutest',
+        # 'USER': 'admin',
+        # 'PASSWORD': '0188',
+        # 'HOST': 'db',
+        # 'PORT': '5434',
     },
-    # 'postgresql': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'hushare',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '0188',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    # }
 }
 
 
